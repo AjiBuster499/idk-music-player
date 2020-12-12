@@ -1,21 +1,25 @@
 package com.ajibuster.app;
+
+import java.util.ArrayList;
+
 // Imports
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 
+
 /**
  * Application
  *
  */
-public class App extends Application{
+public class App extends Application {
   // Global Items
-  Button play;
+  Button play, closeWindow;
+  Stage window;
 
   public static void main( String[] args ) {
     launch(args);
@@ -23,17 +27,31 @@ public class App extends Application{
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-      primaryStage.setTitle("Music Player");
-      StackPane layout = new StackPane();
-      Scene scene = new Scene(layout, 300, 250);
+    window = primaryStage;
+    window.setTitle("Music Player");
 
-      play = new Button("Play");
-      play.setOnAction(e -> System.out.println("play"));
+    StackPane layout = new StackPane();
+    Scene scene = new Scene(layout, 300, 250);
+    
 
-      layout.getChildren().add(play);
+    closeWindow = new Button("Close Window");
+    play = new Button("Play");
 
-      primaryStage.setScene(scene);
-      primaryStage.show();
-      
+    window.setOnCloseRequest(e -> closeProgram());
+    closeWindow.setOnAction(e -> closeProgram());
+    play.setOnAction(e -> MediaHandler.playMusic());
+    
+    layout.getChildren().add(play);
+    layout.getChildren().add(closeWindow);
+
+    window.setScene(scene);
+    window.show();
+    
+  }
+
+  private void closeProgram() {
+    // Runs on Program Close
+
+    window.close();
   }
 }
