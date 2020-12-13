@@ -1,6 +1,6 @@
 package com.ajibuster.app;
 
-// Java Imports
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 // JavaFX Imports
@@ -17,10 +17,10 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
   // Global Items
-  Button play, closeWindow, pause;
+  Button play, closeWindow, pause, newSong; // TODO: newSong is for debugging, remove later
   Stage window;
   MediaHandler mh;
-  Scanner input = new Scanner(System.in);
+  Scanner scanner = new Scanner(System.in);
 
   public static void main(String[] args) {
     launch(args);
@@ -30,7 +30,9 @@ public class App extends Application {
   public void start(Stage primaryStage) throws Exception {
     window = primaryStage;
     window.setTitle("Music Player");
-    mh = new MediaHandler();
+    String fileName = scanner.nextLine();
+    String filePath = Paths.get(fileName).toUri().toString();
+    mh = new MediaHandler(filePath);
 
     HBox topMenu = new HBox();
     BorderPane bPane = new BorderPane();
@@ -40,6 +42,7 @@ public class App extends Application {
     closeWindow = new Button("Close Window");
     play = new Button("Play");
     pause = new Button("Pause");
+    newSong = new Button("DEBUGGER: NEW SONG");
 
     // Close Windows
     window.setOnCloseRequest(e -> closeProgram());
@@ -49,7 +52,7 @@ public class App extends Application {
     play.setOnAction(e -> mh.playMusic());
     pause.setOnAction(e -> mh.pauseMusic());
 
-    topMenu.getChildren().addAll(play, pause, closeWindow);
+    topMenu.getChildren().addAll(play, pause, newSong, closeWindow);
 
     Scene scene = new Scene(bPane, 300, 250);
     window.setScene(scene);

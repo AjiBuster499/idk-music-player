@@ -7,8 +7,8 @@ public class MediaHandler {
   MediaPlayer player;
   Media media;
 
-  public MediaHandler() {
-    this.media = new Media("file:///media/sf_Dev/Java/PersonalProjects/JavaFX/musicplayer/Tactics.mp3");
+  public MediaHandler(String filePath) {
+    this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
   }
 
