@@ -24,7 +24,6 @@ public class MediaHandler {
 
   public static MediaHandler switchSong(String fileName) {
     MediaHandler mh = new MediaHandler(Paths.get(fileName).toUri().toString());
-
     return mh;
   }
   
