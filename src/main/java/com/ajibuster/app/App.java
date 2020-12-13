@@ -51,6 +51,9 @@ public class App extends Application {
     // Button Actions
     play.setOnAction(e -> mh.playMusic());
     pause.setOnAction(e -> mh.pauseMusic());
+    newSong.setOnAction(e -> {
+      this.mh = MediaHandler.switchSong("JumpingFish.mp3");
+    });
 
     topMenu.getChildren().addAll(play, pause, newSong, closeWindow);
 
