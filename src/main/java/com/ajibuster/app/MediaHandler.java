@@ -4,8 +4,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MediaHandler {
-  MediaPlayer player;
-  Media media;
+  private MediaPlayer player;
+  private Media media;
 
   public MediaHandler(String filePath) {
     this.media = new Media(filePath);
@@ -23,6 +23,10 @@ public class MediaHandler {
     player.pause();
   }
 
+  public void stopMusic () {
+    player.stop();
+  }
+  
   public static MediaHandler changeSong(String fileName) {
     MediaHandler mh = new MediaHandler(fileName);
     return mh;
