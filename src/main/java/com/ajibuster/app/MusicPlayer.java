@@ -89,8 +89,8 @@ public class MusicPlayer extends Application {
     this.play = new Button("Play");
     this.pause = new Button("Pause");
     this.stop = new Button("Stop");
-    // this.forward = new Button("Forward");
-    // this.back = new Button("Back");
+    this.forward = new Button("Forward");
+    this.back = new Button("Back");
 
 
     // menuFile Items
@@ -111,6 +111,8 @@ public class MusicPlayer extends Application {
     this.open.setOnAction(e -> {
       FileWindow fw = new FileWindow(this.mh);
       this.mh = fw.display("Open a File...");
+      this.mh.showMetadata();
+      this.mh.showAlbumCover(this.albumPicture);
     });
 
     // Push MenuItems to Menus
