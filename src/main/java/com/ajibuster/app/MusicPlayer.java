@@ -104,7 +104,9 @@ public class MusicPlayer extends Application {
     this.stop.setOnAction(e -> mh.stopMusic());
 
     this.open.setOnAction(e -> {
-      this.mh = new MediaHandler();
+      if (this.mh == null) {
+        this.mh = new MediaHandler();
+      }
       FileWindow fw = new FileWindow(this.mh);
       this.mh = fw.display("Open a File...");
     });

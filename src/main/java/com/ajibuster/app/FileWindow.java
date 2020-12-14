@@ -24,8 +24,8 @@ public class FileWindow {
   }
 
   private static MediaHandler openMusic (File file) {
-    if (mh.getPlayer() != null) {
-      mh.pauseMusic();
+    if (FileWindow.mh.getPlayer() != null) {
+      FileWindow.mh.getPlayer().dispose();
     }
     mh = MediaHandler.changeSong("file://" + file.getAbsolutePath().toString());
     return mh;

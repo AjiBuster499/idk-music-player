@@ -9,13 +9,13 @@ public class MediaHandler {
   private MediaPlayer player;
   private Media media;
 
+  public MediaHandler() {
+  }
+
   private MediaHandler(String filePath) {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
     this.player.setAutoPlay(true);
-  }
-
-  public MediaHandler() {
   }
 
   public void playMusic() {
