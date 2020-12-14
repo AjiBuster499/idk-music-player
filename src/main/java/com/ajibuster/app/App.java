@@ -59,7 +59,7 @@ public class App extends Application {
   /*********************************
   * generateUI()                   *
   * Sets up UI for Application     *
-  * Return Value: TBD              *
+  * Return Value: None             *
   *********************************/
   private void generateUI() {
     this.bPane = new BorderPane();

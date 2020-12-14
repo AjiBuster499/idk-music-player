@@ -1,4 +1,4 @@
-File Manager Window to open Music
+Learn GridPane and other forms of layouts to enhance the UI.
 Create Playlists
-Allow OpenWindow to accept more Nodes if necessary
+Tap into file's metadata to display title, album cover, duration, album
 
