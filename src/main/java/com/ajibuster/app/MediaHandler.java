@@ -1,7 +1,5 @@
 package com.ajibuster.app;
 
-import java.nio.file.Paths;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -14,6 +12,9 @@ public class MediaHandler {
     this.player = new MediaPlayer(media);
   }
 
+  public MediaHandler() {
+  }
+
   public void playMusic() {
     player.play();
   }
@@ -22,8 +23,8 @@ public class MediaHandler {
     player.pause();
   }
 
-  public static MediaHandler switchSong(String fileName) {
-    MediaHandler mh = new MediaHandler(Paths.get(fileName).toUri().toString());
+  public static MediaHandler changeSong(String fileName) {
+    MediaHandler mh = new MediaHandler(fileName);
     return mh;
   }
   

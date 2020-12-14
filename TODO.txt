@@ -1,1 +1,4 @@
+File Manager Window to open Music
+Create Playlists
+Allow OpenWindow to accept more Nodes if necessary
 

@@ -24,7 +24,7 @@ public class App extends Application {
   BorderPane bPane;
   MenuBar menuBar;
   Menu menuFile;
-  MenuItem play, pause, switchSong, exit;
+  MenuItem play, pause, open, exit;
   
   Stage window;
   Scene scene;
@@ -69,12 +69,8 @@ public class App extends Application {
     // menuFile Items
     this.play = new MenuItem("Play");
     this.pause = new MenuItem("Pause");
-    this.switchSong = new MenuItem ("Change Song");
+    this.open = new MenuItem ("Change Song");
     this.exit = new MenuItem("Exit");
-
-    // Text Field Creation
-    this.songField = new TextField();
-
 
     // Define Actions for Menus
     this.exit.setOnAction(e -> {
@@ -84,18 +80,12 @@ public class App extends Application {
     play.setOnAction(e -> mh.playMusic());
     pause.setOnAction(e -> mh.pauseMusic());
 
-    this.switchSong.setOnAction(e -> {
-      OpenWindow.display("Choose a Song", this.songField);
-    });
-
-    this.songField.setOnAction(e -> {
-      this.mh.pauseMusic();
-      this.mh = MediaHandler.switchSong(songField.getText());
-      OpenWindow.hide();
-      this.mh.playMusic();
+    this.open.setOnAction(e -> {
+      FileWindow fw = new FileWindow(this.mh);
+      this.mh = fw.display("Open a File...");
     });
     // Push MenuItems to Menus
-    menuFile.getItems().addAll(this.play, this.pause, this.switchSong, new SeparatorMenuItem(), this.exit);
+    menuFile.getItems().addAll(this.play, this.pause, this.open, new SeparatorMenuItem(), this.exit);
 
 
     // Push Menus to MenuBar

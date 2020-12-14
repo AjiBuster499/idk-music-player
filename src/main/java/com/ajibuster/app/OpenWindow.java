@@ -27,8 +27,4 @@ public class OpenWindow {
     window.setScene(scene);
     window.showAndWait();
   }
-
-  public static void hide () {
-    window.hide();
-  }
 }
