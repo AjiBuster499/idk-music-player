@@ -4,27 +4,32 @@ import java.nio.file.Paths;
 
 // JavaFX Imports
 import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.geometry.Insets;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.Scene;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
  * Application
  *
  */
-public class App extends Application {
-  // Global Items
-  TextField songField;
-  
+public class MusicPlayer extends Application {
+  // Global Items  
   BorderPane bPane;
+  GridPane gp;
+  HBox bottomPane;
   MenuBar menuBar;
   Menu menuFile;
   MenuItem play, pause, open, exit;
+  VBox leftSidePane;
   
   Stage window;
   Scene scene;
@@ -65,6 +70,20 @@ public class App extends Application {
     this.bPane = new BorderPane();
     this.menuBar = new MenuBar();
     this.menuFile = new Menu("File");
+    this.gp = new GridPane();
+    this.bottomPane = new HBox();
+    this.leftSidePane = new VBox();
+
+    //Set up GridPane
+    this.gp.setPadding(new Insets(10, 10, 10, 10));
+    this.gp.setVgap(8);
+    this.gp.setHgap(10);
+
+    // Test Button
+    Button test = new Button("Test!");
+    test.setOnAction(e -> {
+      System.out.println("Test Passed Failurely!");
+    });
 
     // menuFile Items
     this.play = new MenuItem("Play");
@@ -84,9 +103,12 @@ public class App extends Application {
       FileWindow fw = new FileWindow(this.mh);
       this.mh = fw.display("Open a File...");
     });
-    // Push MenuItems to Menus
-    menuFile.getItems().addAll(this.play, this.pause, this.open, new SeparatorMenuItem(), this.exit);
 
+    // Push MenuItems to Menus
+    this.menuFile.getItems().addAll(this.play, this.pause, this.open, new SeparatorMenuItem(), this.exit);
+
+    // Push UI Items to GridPane
+    GridPane.setConstraints(test, 0, 0);
 
     // Push Menus to MenuBar
     this.menuBar.getMenus().addAll(this.menuFile);
@@ -94,5 +116,8 @@ public class App extends Application {
     // Create Scene
     this.scene = new Scene(bPane, 300, 250);
     this.bPane.setTop(this.menuBar);
+    this.bPane.setCenter(this.gp);
+    this.bPane.setLeft(this.leftSidePane);
+    this.bPane.setBottom(this.bottomPane);
   }
 }
