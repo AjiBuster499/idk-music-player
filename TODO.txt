@@ -1,5 +1,6 @@
 Learn GridPane and other forms of layouts to enhance the UI.
 Allow the player to open with no Song.
+Create constant tasks (e.g. updating progress bar with duration)
 Create Playlists
 Tap into file's metadata to display title, album cover, duration, album
 

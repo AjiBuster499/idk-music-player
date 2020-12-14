@@ -1,6 +1,5 @@
 package com.ajibuster.app;
 
-import javafx.collections.ObservableMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -10,7 +9,7 @@ public class MediaHandler {
   private MediaPlayer player;
   private Media media;
 
-  public MediaHandler(String filePath) {
+  private MediaHandler(String filePath) {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
     this.player.setAutoPlay(true);
@@ -31,22 +30,6 @@ public class MediaHandler {
     player.stop();
   }
 
-  public void showMetadata () {
-    player.setOnReady(new Runnable(){
-
-      @Override
-      public void run() {
-        ObservableMap<String, Object> metadata = media.getMetadata();
-
-        for (String key : metadata.keySet()) {
-          System.out.println(key + " = " + metadata.get(key));
-        }
-
-      }
-      
-    });
-  }
-
   public void showAlbumCover (ImageView imageView) {
     player.setOnReady(new Runnable () {
       @Override
@@ -60,6 +43,10 @@ public class MediaHandler {
   public static MediaHandler changeSong(String fileName) {
     MediaHandler mh = new MediaHandler(fileName);
     return mh;
+  }
+
+  public MediaPlayer getPlayer () {
+    return this.player;
   }
   
 }

@@ -1,7 +1,5 @@
 package com.ajibuster.app;
 
-import java.nio.file.Paths;
-
 // JavaFX Imports
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
@@ -50,9 +48,6 @@ public class MusicPlayer extends Application {
   public void start(Stage primaryStage) throws Exception {
     window = primaryStage;
     window.setTitle("Music Player");
-    String fileName = "Tactics.mp3";
-    String filePath = Paths.get(fileName).toUri().toString();
-    mh = new MediaHandler(filePath);
 
     generateUI();
 
@@ -109,10 +104,9 @@ public class MusicPlayer extends Application {
     this.stop.setOnAction(e -> mh.stopMusic());
 
     this.open.setOnAction(e -> {
+      this.mh = new MediaHandler();
       FileWindow fw = new FileWindow(this.mh);
       this.mh = fw.display("Open a File...");
-      this.mh.showMetadata();
-      this.mh.showAlbumCover(this.albumPicture);
     });
 
     // Push MenuItems to Menus

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 public class FileWindow {
   private static Stage window = new Stage();
   private static FileChooser fc = new FileChooser();
-  public static  MediaHandler mh;
+  private static  MediaHandler mh;
 
   public FileWindow(MediaHandler mh) {
     FileWindow.mh = mh;
@@ -24,10 +24,10 @@ public class FileWindow {
   }
 
   private static MediaHandler openMusic (File file) {
-    mh.pauseMusic();
+    if (mh.getPlayer() != null) {
+      mh.pauseMusic();
+    }
     mh = MediaHandler.changeSong("file://" + file.getAbsolutePath().toString());
-    mh.playMusic();
-
     return mh;
   }
 }
