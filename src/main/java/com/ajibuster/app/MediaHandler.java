@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 
 public class MediaHandler {
   private MediaPlayer player;
@@ -30,7 +31,12 @@ public class MediaHandler {
     player.stop();
   }
 
-  public void showAlbumCover (ImageView imageView) {
+  public static MediaHandler changeSong(String fileName) {
+    MediaHandler mh = new MediaHandler(fileName);
+    return mh;
+  }
+  
+  public void getAlbumCover (ImageView imageView) {
     player.setOnReady(new Runnable () {
       @Override
       public void run () {
@@ -40,13 +46,16 @@ public class MediaHandler {
     });
   }
 
-  public static MediaHandler changeSong(String fileName) {
-    MediaHandler mh = new MediaHandler(fileName);
-    return mh;
-  }
-
   public MediaPlayer getPlayer () {
     return this.player;
+  }
+
+  public boolean isPlaying() {
+    if (this.player.getStatus() == Status.PLAYING) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
 }

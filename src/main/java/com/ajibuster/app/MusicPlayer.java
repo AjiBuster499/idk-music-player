@@ -92,8 +92,6 @@ public class MusicPlayer extends Application {
     this.open = new MenuItem ("Open File...");
     this.exit = new MenuItem("Exit");
 
-    // Display Album Cover
-
     // Define Actions for Items
     this.exit.setOnAction(e -> {
       closeProgram();
@@ -110,6 +108,8 @@ public class MusicPlayer extends Application {
       FileWindow fw = new FileWindow(this.mh);
       this.mh = fw.display("Open a File...");
     });
+
+    updateProgressBar();
 
     // Push MenuItems to Menus
     this.menuFile.getItems().addAll(this.open, new SeparatorMenuItem(), this.exit);
@@ -128,5 +128,14 @@ public class MusicPlayer extends Application {
     this.bPane.setCenter(this.centerPane);
     this.bPane.setLeft(this.leftSidePane);
     this.bPane.setBottom(this.bottomPane);
+  }
+
+  /* updateProgressBar()
+   * Return Value: TBD
+   * Runs a task to constantly update
+   * ProgressBar (the time of the file) 
+   */
+  private void updateProgressBar () {
+    // I'm so stupid...
   }
 }
