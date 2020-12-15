@@ -12,6 +12,11 @@ public class FileWindow {
 
   public FileWindow(MediaHandler mh) {
     FileWindow.mh = mh;
+    fc.getExtensionFilters().addAll(
+      new FileChooser.ExtensionFilter("mp3 Files", "*.mp3"),
+      new FileChooser.ExtensionFilter("All Files", "*.*")
+      // new FileChooser.ExtensionFilter("Video Files", "*.mp4"); Future Update for Video?
+    );
   }
 
   public MediaHandler display (String title) {

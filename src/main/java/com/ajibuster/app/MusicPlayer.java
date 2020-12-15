@@ -22,22 +22,22 @@ import javafx.stage.Stage;
  */
 public class MusicPlayer extends Application {
   // Global Items  
-  BorderPane bPane;
-  StackPane centerPane;
-  HBox bottomButtons;
-  MenuBar menuBar;
-  Menu menuFile;
-  MenuItem open, exit;
-  VBox leftSidePane, bottomPane;
+  protected BorderPane bPane;
+  protected StackPane centerPane;
+  protected HBox bottomButtons;
+  protected MenuBar menuBar;
+  protected Menu menuFile;
+  protected MenuItem open, exit;
+  protected VBox leftSidePane, bottomPane;
   
-  Button play, pause, stop, forward, back;
-  ProgressBar playTime;
-  ImageView albumPicture;
+  protected Button play, pause, stop, forward, back;
+  protected ProgressBar playTime;
+  protected ImageView albumPicture;
 
-  Stage window;
-  Scene scene;
+  protected Stage window;
+  protected Scene scene;
 
-  MediaHandler mh;
+  protected MediaHandler mh;
 
 
   public static void main(String[] args) {
@@ -123,7 +123,7 @@ public class MusicPlayer extends Application {
     this.menuBar.getMenus().addAll(this.menuFile);
 
     // Create Scene
-    this.scene = new Scene(bPane, 300, 250);
+    this.scene = new Scene(bPane, 800, 800);
     this.bPane.setTop(this.menuBar);
     this.bPane.setCenter(this.centerPane);
     this.bPane.setLeft(this.leftSidePane);
