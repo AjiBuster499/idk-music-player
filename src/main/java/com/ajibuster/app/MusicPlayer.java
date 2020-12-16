@@ -3,6 +3,7 @@ package com.ajibuster.app;
 
 // JavaFX Imports
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -35,6 +36,8 @@ public class MusicPlayer extends Application {
   protected ProgressBar playTime;
   protected ImageView albumPicture;
 
+  protected Task<Void> playDuration;
+
   protected Stage window;
   protected Scene scene;
 
@@ -47,13 +50,14 @@ public class MusicPlayer extends Application {
   @Override
   public void start (Stage primaryStage) throws Exception {
     window = primaryStage;
-    window.setTitle("Music Player");
+    window.setTitle("IDK Music Player");
 
     generateUI();
 
     window.setScene(scene);
     window.show();
 
+    this.playDuration = updateProgressBar();
   }
 
   private void closeProgram () {
@@ -96,10 +100,24 @@ public class MusicPlayer extends Application {
     this.exit.setOnAction(e -> {
       closeProgram();
     });
+    // THE THREAD SHALL SCARE ME NOT
     
-    this.play.setOnAction(e -> mh.playMusic());
-    this.pause.setOnAction(e -> mh.pauseMusic());
-    this.stop.setOnAction(e -> mh.stopMusic());
+    this.play.setOnAction(e -> {
+      if (mh != null) {
+        mh.playMusic();
+      }
+      this.playTime.progressProperty().bind(playDuration.progressProperty());
+    });
+    this.pause.setOnAction(e -> {
+      if (mh != null) {
+        mh.pauseMusic();
+      }
+    });
+    this.stop.setOnAction(e -> {
+      if (mh != null) {
+        mh.stopMusic();
+      }
+    });
 
     this.open.setOnAction(e -> {
       if (this.mh == null) {
@@ -133,7 +151,47 @@ public class MusicPlayer extends Application {
    * Runs a task to constantly update
    * ProgressBar (the time of the file) 
    */
-  private void updateProgressBar () {
-    // Attempt Platform.runLater() 
+  private Task<Void> updateProgressBar () {
+    // So Basically
+    // Run what I was timing here
+    // Don't be afraid of Threads
+    // Tasks run on the same thread as the GUI, but run in the background
+    // Incremement the progress by 1 every 1000ms, up to a max of media.duration
+    return new Task<Void>(){
+
+      @Override
+      protected Void call() throws Exception {
+        final double max = mh.getPlayer().getMedia().getDuration().toSeconds();
+        for (int i = 0; i <= max; i++) {
+          if (isCancelled()) {
+            updateMessage("Cancelled");
+            break;
+          }
+          if (mh != null) {
+            if (mh.isPlaying()) {
+              updateProgress(i, max);
+              updateMessage("Time" + i);
+            }
+          }
+
+          // Sleep for 1000ms to avoid nuking the bar
+          // try {
+          //   Thread.sleep(1000);
+          // } catch (InterruptedException e) {
+          //   if (isCancelled()) {
+          //     updateMessage("Cancelled");
+          //     break;
+          //   }
+          // }
+        }
+        
+        return null;
+      }
+    };
+  
+  }
+
+  {
+    new Thread(playDuration).start();
   }
 }
