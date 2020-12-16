@@ -2,7 +2,6 @@ package com.ajibuster.app;
 
 // JavaFX Imports
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -10,9 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.Scene;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,7 +31,7 @@ public class MusicPlayer extends Application {
   protected VBox leftSidePane, bottomPane;
   
   protected Button play, pause, stop, forward, back;
-  protected ProgressBar playTime;
+  protected Slider timeBar;
   protected ImageView albumPicture;
 
   protected Thread playDuration;
@@ -56,7 +55,6 @@ public class MusicPlayer extends Application {
     window.setScene(scene);
     window.show();
 
-    playDuration = updateProgressBar();
   }
 
   private void closeProgram () {
@@ -71,77 +69,76 @@ public class MusicPlayer extends Application {
   *********************************/
   private void generateUI () {
     // Initialize UI Components
-    this.bPane = new BorderPane();
-    this.menuBar = new MenuBar();
-    this.menuFile = new Menu("File");
-    this.centerPane = new StackPane();
-    this.bottomButtons = new HBox();
-    this.bottomPane = new VBox();
-    this.leftSidePane = new VBox();
+    bPane = new BorderPane();
+    menuBar = new MenuBar();
+    menuFile = new Menu("File");
+    centerPane = new StackPane();
+    bottomButtons = new HBox();
+    bottomPane = new VBox();
+    leftSidePane = new VBox();
 
     // Initialize Others
-    this.playTime = new ProgressBar();
-    this.albumPicture = new ImageView();
+    albumPicture = new ImageView();
+    timeBar = new Slider();
 
     // Initialize Buttons
-    this.play = new Button("Play");
-    this.pause = new Button("Pause");
-    this.stop = new Button("Stop");
-    this.forward = new Button("Forward");
-    this.back = new Button("Back");
+    play = new Button("Play");
+    pause = new Button("Pause");
+    stop = new Button("Stop");
+    forward = new Button("Forward");
+    back = new Button("Back");
 
 
     // menuFile Items
-    this.open = new MenuItem ("Open File...");
-    this.exit = new MenuItem("Exit");
+    open = new MenuItem ("Open File...");
+    exit = new MenuItem("Exit");
 
     // Define Actions for Items
-    this.exit.setOnAction(e -> {
+    exit.setOnAction(e -> {
       closeProgram();
     });
-    // THE THREAD SHALL SCARE ME NOT
     
-    this.play.setOnAction(e -> {
+    play.setOnAction(e -> {
       if (mh != null) {
-        mh.playMusic(this.playDuration);
+        mh.playMusic();
       }
     });
-    this.pause.setOnAction(e -> {
+    pause.setOnAction(e -> {
       if (mh != null) {
         mh.pauseMusic();
       }
     });
-    this.stop.setOnAction(e -> {
+    stop.setOnAction(e -> {
       if (mh != null) {
         mh.stopMusic();
       }
     });
 
-    this.open.setOnAction(e -> {
-      if (this.mh == null) {
-        this.mh = new MediaHandler();
+    open.setOnAction(e -> {
+      if (mh == null) {
+        mh = new MediaHandler();
       }
-      FileWindow fw = new FileWindow(this.mh);
-      this.mh = fw.display("Open a File...");
+      FileWindow fw = new FileWindow(mh);
+      mh = fw.display("Open a File...");
     });
 
     // Push MenuItems to Menus
-    this.menuFile.getItems().addAll(this.open, new SeparatorMenuItem(), this.exit);
+    menuFile.getItems().addAll(open, new SeparatorMenuItem(), exit);
 
     // Push UI Items to Components
-    this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop);
-    this.bottomPane.getChildren().addAll(this.playTime, this.bottomButtons);
-    this.centerPane.getChildren().add(albumPicture);
+    bottomButtons.getChildren().addAll(play, pause, stop);
+    bottomPane.getChildren().addAll(timeBar, bottomButtons);
+    centerPane.getChildren().add(albumPicture);
 
     // Push Menus to MenuBar
-    this.menuBar.getMenus().addAll(this.menuFile);
+    menuBar.getMenus().addAll(menuFile);
 
     // Create Scene
-    this.scene = new Scene(bPane, 800, 800);
-    this.bPane.setTop(this.menuBar);
-    this.bPane.setCenter(this.centerPane);
-    this.bPane.setLeft(this.leftSidePane);
-    this.bPane.setBottom(this.bottomPane);
+    scene = new Scene(bPane, 800, 800);
+    bPane.setTop(menuBar);
+    bPane.setCenter(centerPane);
+    bPane.setLeft(leftSidePane);
+    bPane.setBottom(bottomPane);
   }
 
   /* updateProgressBar()
@@ -149,31 +146,31 @@ public class MusicPlayer extends Application {
    * Runs a task to constantly update
    * ProgressBar (the time of the file) 
    */
-  private Thread updateProgressBar () {
-      return new Thread(new Runnable() {
-      @Override
-      public void run() {
-        double progress = 0;
-        final double duration = mh.getPlayer().getMedia().getDuration().toSeconds();
-        for(int i = 0; i <= duration; i++){
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          progress++;
+  // private Thread updateSlider () {
+  //     return new Thread(new Runnable() {
+  //     @Override
+  //     public void run() {
+  //       double progress = 0;
+  //       final double duration = mh.getPlayer().getMedia().getDuration().toSeconds();
+  //       for(int i = 0; i <= duration; i++){
+  //         try {
+  //           Thread.sleep(1000);
+  //         } catch (InterruptedException e) {
+  //           e.printStackTrace();
+  //         }
+  //         progress++;
 
-          // Convert progress to percentage of duration
-          final double timePlayed = progress / duration;
-          Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-              // Update ProgressBar Here
-              playTime.setProgress(timePlayed);
-            }
-          });
-        }
-      }
-    });
-  }
+  //         // Convert progress to percentage of duration
+  //         final double timePlayed = progress / duration;
+  //         Platform.runLater(new Runnable() {
+  //           @Override
+  //           public void run() {
+  //             // Update ProgressBar Here
+  //             playTime.setProgress(timePlayed);
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 }

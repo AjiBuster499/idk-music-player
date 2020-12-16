@@ -19,9 +19,8 @@ public class MediaHandler {
     // this.player.setAutoPlay(true);
   }
 
-  public void playMusic(Thread th) {
+  public void playMusic() {
     player.play();
-    th.start();
   }
 
   public void pauseMusic () {
@@ -48,11 +47,11 @@ public class MediaHandler {
   }
 
   public MediaPlayer getPlayer () {
-    return this.player;
+    return player;
   }
 
   public boolean isPlaying() {
-    if (this.player.getStatus() == Status.PLAYING) {
+    if (player.getStatus() == Status.PLAYING) {
       return true;
     } else {
       return false;
