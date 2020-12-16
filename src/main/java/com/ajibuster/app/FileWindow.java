@@ -1,6 +1,7 @@
 package com.ajibuster.app;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,10 +30,12 @@ public class FileWindow {
   }
 
   private static MediaHandler openMusic (File file) {
+    // TODO: Allow Spaces in File
+    String filePath = file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
     if (FileWindow.mh.getPlayer() != null) {
       FileWindow.mh.getPlayer().dispose();
     }
-    mh = MediaHandler.changeSong("file://" + file.getAbsolutePath().toString());
+    mh = MediaHandler.changeSong("file://" + filePath);
     return mh;
   }
 }

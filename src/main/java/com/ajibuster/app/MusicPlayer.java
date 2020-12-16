@@ -1,5 +1,6 @@
 package com.ajibuster.app;
 
+
 // JavaFX Imports
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
@@ -39,13 +40,12 @@ public class MusicPlayer extends Application {
 
   protected MediaHandler mh;
 
-
-  public static void main(String[] args) {
+  public static void main (String[] args) {
     launch(args);
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start (Stage primaryStage) throws Exception {
     window = primaryStage;
     window.setTitle("Music Player");
 
@@ -56,7 +56,7 @@ public class MusicPlayer extends Application {
 
   }
 
-  private void closeProgram() {
+  private void closeProgram () {
     // Runs on Program Close
     window.close();
   }
@@ -66,7 +66,7 @@ public class MusicPlayer extends Application {
   * Sets up UI for Application     *
   * Return Value: None             *
   *********************************/
-  private void generateUI() {
+  private void generateUI () {
     // Initialize UI Components
     this.bPane = new BorderPane();
     this.menuBar = new MenuBar();
@@ -77,7 +77,7 @@ public class MusicPlayer extends Application {
     this.leftSidePane = new VBox();
 
     // Initialize Others
-    this.playTime = new ProgressBar();
+    this.playTime = new ProgressBar(0.0);
     this.albumPicture = new ImageView();
 
     // Initialize Buttons
@@ -109,8 +109,6 @@ public class MusicPlayer extends Application {
       this.mh = fw.display("Open a File...");
     });
 
-    updateProgressBar();
-
     // Push MenuItems to Menus
     this.menuFile.getItems().addAll(this.open, new SeparatorMenuItem(), this.exit);
 
@@ -136,6 +134,6 @@ public class MusicPlayer extends Application {
    * ProgressBar (the time of the file) 
    */
   private void updateProgressBar () {
-    // I'm so stupid...
+    // Attempt Platform.runLater() 
   }
 }
