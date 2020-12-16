@@ -1,6 +1,5 @@
 package com.ajibuster.app;
 
-
 // JavaFX Imports
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -53,11 +52,13 @@ public class MusicPlayer extends Application {
     window.setTitle("IDK Music Player");
 
     generateUI();
+    this.playDuration = updateProgressBar();
+    playTime.progressProperty().bind(playDuration.progressProperty());
 
     window.setScene(scene);
     window.show();
 
-    this.playDuration = updateProgressBar();
+    new Thread(this.playDuration).start();
   }
 
   private void closeProgram () {
@@ -81,7 +82,7 @@ public class MusicPlayer extends Application {
     this.leftSidePane = new VBox();
 
     // Initialize Others
-    this.playTime = new ProgressBar(0.0);
+    this.playTime = new ProgressBar();
     this.albumPicture = new ImageView();
 
     // Initialize Buttons
@@ -106,7 +107,6 @@ public class MusicPlayer extends Application {
       if (mh != null) {
         mh.playMusic();
       }
-      this.playTime.progressProperty().bind(playDuration.progressProperty());
     });
     this.pause.setOnAction(e -> {
       if (mh != null) {
@@ -162,36 +162,23 @@ public class MusicPlayer extends Application {
       @Override
       protected Void call() throws Exception {
         final double max = mh.getPlayer().getMedia().getDuration().toSeconds();
-        for (int i = 0; i <= max; i++) {
-          if (isCancelled()) {
-            updateMessage("Cancelled");
-            break;
-          }
-          if (mh != null) {
-            if (mh.isPlaying()) {
-              updateProgress(i, max);
-              updateMessage("Time" + i);
-            }
-          }
+        double currentTime = 0;
+        while (currentTime <= max) {
+          currentTime++;
+          updateProgress(currentTime, max);
+          updateMessage("Time" + currentTime);  
 
-          // Sleep for 1000ms to avoid nuking the bar
-          // try {
-          //   Thread.sleep(1000);
-          // } catch (InterruptedException e) {
-          //   if (isCancelled()) {
-          //     updateMessage("Cancelled");
-          //     break;
-          //   }
-          // }
+          // Sleep for 1000ms to avoid 1-shotting the bar
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
         
         return null;
       }
     };
   
-  }
-
-  {
-    new Thread(playDuration).start();
   }
 }
