@@ -16,11 +16,12 @@ public class MediaHandler {
   private MediaHandler(String filePath) {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
-    this.player.setAutoPlay(true);
+    // this.player.setAutoPlay(true);
   }
 
-  public void playMusic() {
+  public void playMusic(Thread th) {
     player.play();
+    th.start();
   }
 
   public void pauseMusic () {

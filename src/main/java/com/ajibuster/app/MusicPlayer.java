@@ -2,7 +2,7 @@ package com.ajibuster.app;
 
 // JavaFX Imports
 import javafx.application.Application;
-import javafx.concurrent.Task;
+import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -35,7 +35,7 @@ public class MusicPlayer extends Application {
   protected ProgressBar playTime;
   protected ImageView albumPicture;
 
-  protected Task<Void> playDuration;
+  protected Thread playDuration;
 
   protected Stage window;
   protected Scene scene;
@@ -52,13 +52,11 @@ public class MusicPlayer extends Application {
     window.setTitle("IDK Music Player");
 
     generateUI();
-    this.playDuration = updateProgressBar();
-    playTime.progressProperty().bind(playDuration.progressProperty());
 
     window.setScene(scene);
     window.show();
 
-    new Thread(this.playDuration).start();
+    playDuration = updateProgressBar();
   }
 
   private void closeProgram () {
@@ -105,7 +103,7 @@ public class MusicPlayer extends Application {
     
     this.play.setOnAction(e -> {
       if (mh != null) {
-        mh.playMusic();
+        mh.playMusic(this.playDuration);
       }
     });
     this.pause.setOnAction(e -> {
@@ -151,34 +149,31 @@ public class MusicPlayer extends Application {
    * Runs a task to constantly update
    * ProgressBar (the time of the file) 
    */
-  private Task<Void> updateProgressBar () {
-    // So Basically
-    // Run what I was timing here
-    // Don't be afraid of Threads
-    // Tasks run on the same thread as the GUI, but run in the background
-    // Incremement the progress by 1 every 1000ms, up to a max of media.duration
-    return new Task<Void>(){
-
+  private Thread updateProgressBar () {
+      return new Thread(new Runnable() {
       @Override
-      protected Void call() throws Exception {
-        final double max = mh.getPlayer().getMedia().getDuration().toSeconds();
-        double currentTime = 0;
-        while (currentTime <= max) {
-          currentTime++;
-          updateProgress(currentTime, max);
-          updateMessage("Time" + currentTime);  
-
-          // Sleep for 1000ms to avoid 1-shotting the bar
+      public void run() {
+        double progress = 0;
+        final double duration = mh.getPlayer().getMedia().getDuration().toSeconds();
+        for(int i = 0; i <= duration; i++){
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
+          progress++;
+
+          // Convert progress to percentage of duration
+          final double timePlayed = progress / duration;
+          Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+              // Update ProgressBar Here
+              playTime.setProgress(timePlayed);
+            }
+          });
         }
-        
-        return null;
       }
-    };
-  
+    });
   }
 }
