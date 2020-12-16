@@ -30,7 +30,6 @@ public class FileWindow {
   }
 
   private static MediaHandler openMusic (File file) {
-    // TODO: Allow Spaces in File
     String filePath = file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
     if (FileWindow.mh.getPlayer() != null) {
       FileWindow.mh.getPlayer().dispose();
