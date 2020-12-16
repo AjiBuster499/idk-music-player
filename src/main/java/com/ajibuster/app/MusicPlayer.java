@@ -2,6 +2,7 @@ package com.ajibuster.app;
 
 // JavaFX Imports
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -55,6 +56,8 @@ public class MusicPlayer extends Application {
     window.setScene(scene);
     window.show();
 
+    playDuration = updateSlider();
+    playDuration.start();
   }
 
   private void closeProgram () {
@@ -141,36 +144,36 @@ public class MusicPlayer extends Application {
     bPane.setBottom(bottomPane);
   }
 
-  /* updateProgressBar()
+  /* updateSlider()
    * Return Value: TBD
    * Runs a task to constantly update
-   * ProgressBar (the time of the file) 
+   * Slider (the time of the file) 
    */
-  // private Thread updateSlider () {
-  //     return new Thread(new Runnable() {
-  //     @Override
-  //     public void run() {
-  //       double progress = 0;
-  //       final double duration = mh.getPlayer().getMedia().getDuration().toSeconds();
-  //       for(int i = 0; i <= duration; i++){
-  //         try {
-  //           Thread.sleep(1000);
-  //         } catch (InterruptedException e) {
-  //           e.printStackTrace();
-  //         }
-  //         progress++;
+  private Thread updateSlider () {
+      return new Thread(new Runnable() {
+      @Override
+      public void run() {
+        double progress = 0;
+        final double duration = timeBar.getMax();
+        for(int i = 0; i <= duration; i++){
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          progress++;
 
-  //         // Convert progress to percentage of duration
-  //         final double timePlayed = progress / duration;
-  //         Platform.runLater(new Runnable() {
-  //           @Override
-  //           public void run() {
-  //             // Update ProgressBar Here
-  //             playTime.setProgress(timePlayed);
-  //           }
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
+          // Convert progress to percentage of duration
+          final double timePlayed = progress;
+          Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+              // Update ProgressBar Here
+              timeBar.setValue(timePlayed);
+            }
+          });
+        }
+      }
+    });
+  }
 }
