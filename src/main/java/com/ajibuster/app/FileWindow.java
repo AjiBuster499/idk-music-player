@@ -31,8 +31,10 @@ public class FileWindow {
 
   private static MediaHandler openMusic (File file) {
     String filePath = file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
-    if (FileWindow.mh.getPlayer() != null) {
-      FileWindow.mh.getPlayer().dispose();
+    if (FileWindow.mh != null) {
+      if (FileWindow.mh.getPlayer() != null) {
+        FileWindow.mh.getPlayer().dispose();
+      }
     }
     mh = MediaHandler.changeSong("file://" + filePath);
     return mh;

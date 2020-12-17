@@ -1,7 +1,6 @@
 package com.ajibuster.app;
 
 import javafx.scene.control.Slider;
-import javafx.scene.media.Media;
 
 public class SliderRunnable implements Runnable {
   // SliderRunnable implements Runnable
@@ -12,14 +11,13 @@ public class SliderRunnable implements Runnable {
 
   private boolean stopRequested = false;
   private Slider slider;
-  private Media media;
+  private double duration;
 
-  public SliderRunnable (Slider s, Media m) {
+  public SliderRunnable (Slider s, double d) {
     // We need a method to handle the slider tracking play time.
-    // To that end, we need to know the Slider and the Media.
-    // Insert bad joke about S and M.
+    // To that end, we need to know the Slider and the Duration
     this.slider = s;
-    this.media = m;
+    this.duration = d;
   }
 
   public synchronized void requestStop () {
@@ -34,7 +32,7 @@ public class SliderRunnable implements Runnable {
   public void run () {
     while (!stopRequested) {
       // In here do your business logic
-      System.out.println("Hi!");
+      trackProgress();
       sleep(1000);
     }
 
@@ -43,11 +41,15 @@ public class SliderRunnable implements Runnable {
   private void trackProgress () {
     // In here we update the slider with the song
     // play time.
+    double progress = 0;
+    while (progress <= duration) {
+      slider.setValue(progress);
+      progress++;
+    }
   }
   
   private void sleep (long millis) {
     try {
-      System.out.println("Sleeping");
       Thread.sleep(millis);
     } catch (InterruptedException e) {
       e.printStackTrace();

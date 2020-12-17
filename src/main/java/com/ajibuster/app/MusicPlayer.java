@@ -37,16 +37,16 @@ public class MusicPlayer extends Application {
   protected Stage window;
   protected Scene scene;
 
-  protected SliderRunnable st;
+  protected SliderRunnable sr;
 
   protected MediaHandler mh;
 
-  public static void main (String[] args) {
+  public static void main(String[] args) {
     launch(args);
   }
 
   @Override
-  public void start (Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) throws Exception {
     window = primaryStage;
     window.setTitle("IDK Music Player");
 
@@ -56,23 +56,14 @@ public class MusicPlayer extends Application {
     window.setOnCloseRequest(e -> closeProgram());
     window.show();
 
-    Thread th = new Thread(st, "Slider-Thread");
+    Thread th = new Thread(sr, "Slider-Thread");
     th.start();
   }
 
-  private void closeProgram () {
-    System.out.println("Stopping all Threads");
-    st.requestStop();
-    // Runs on Program Close
-    window.close();
-  }
-
-  /*********************************
-  * generateUI()                   *
-  * Sets up UI for Application     *
-  * Return Value: None             *
-  *********************************/
-  private void generateUI () {
+  /******************************************************************
+   * generateUI() * Sets up UI for Application * Return Value: None *
+   *****************************************************************/
+  private void generateUI() {
     // Initialize UI Components
     bPane = new BorderPane();
     menuBar = new MenuBar();
@@ -84,8 +75,8 @@ public class MusicPlayer extends Application {
 
     // Initialize Others
     albumPicture = new ImageView();
-    timeBar = new Slider();
-    st = new SliderRunnable(timeBar, mh.getMedia());
+    timeBar = new Slider(0, isMediaHandlerAlive() ? mh.duration : 10, 0);
+    sr = new SliderRunnable(timeBar, isMediaHandlerAlive() ? mh.duration : 10);
 
     // Initialize Buttons
     play = new Button("Play");
@@ -94,34 +85,33 @@ public class MusicPlayer extends Application {
     forward = new Button("Forward");
     back = new Button("Back");
 
-
     // menuFile Items
-    open = new MenuItem ("Open File...");
+    open = new MenuItem("Open File...");
     exit = new MenuItem("Exit");
 
     // Define Actions for Items
     exit.setOnAction(e -> {
       closeProgram();
     });
-    
+
     play.setOnAction(e -> {
-      if (mh != null) {
+      if (isMediaHandlerAlive()) {
         mh.playMusic();
       }
     });
     pause.setOnAction(e -> {
-      if (mh != null) {
+      if (isMediaHandlerAlive()) {
         mh.pauseMusic();
       }
     });
     stop.setOnAction(e -> {
-      if (mh != null) {
+      if (isMediaHandlerAlive()) {
         mh.stopMusic();
       }
     });
 
     open.setOnAction(e -> {
-      if (mh == null) {
+      if (!isMediaHandlerAlive()) {
         mh = new MediaHandler();
       }
       FileWindow fw = new FileWindow(mh);
@@ -146,4 +136,25 @@ public class MusicPlayer extends Application {
     bPane.setLeft(leftSidePane);
     bPane.setBottom(bottomPane);
   }
+
+  private void closeProgram() {
+    System.out.println("Stopping all Threads");
+    sr.requestStop();
+    // Runs on Program Close
+    window.close();
+  }
+
+  private boolean isMediaHandlerAlive() {
+    if (this.mh == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // Abandoned until Further Need
+  // private void openFile () {
+  //   FileWindow fw = new FileWindow(this.mh);
+  //   this.mh = fw.display("Open a File...");
+  // }
 }

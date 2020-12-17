@@ -9,6 +9,7 @@ import javafx.scene.media.MediaPlayer.Status;
 public class MediaHandler {
   private MediaPlayer player;
   private Media media;
+  public double duration;
 
   public MediaHandler() {
   }
@@ -16,6 +17,7 @@ public class MediaHandler {
   private MediaHandler(String filePath) {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
+    this.duration = this.media.getDuration().toSeconds();
     // this.player.setAutoPlay(true);
   }
 
@@ -62,5 +64,5 @@ public class MediaHandler {
       return false;
     }
   }
-  
+
 }
