@@ -37,6 +37,8 @@ public class MusicPlayer extends Application {
   protected Stage window;
   protected Scene scene;
 
+  protected SliderRunnable st;
+
   protected MediaHandler mh;
 
   public static void main (String[] args) {
@@ -53,9 +55,14 @@ public class MusicPlayer extends Application {
     window.setScene(scene);
     window.setOnCloseRequest(e -> closeProgram());
     window.show();
+
+    Thread th = new Thread(st, "Slider-Thread");
+    th.start();
   }
 
   private void closeProgram () {
+    System.out.println("Stopping all Threads");
+    st.requestStop();
     // Runs on Program Close
     window.close();
   }
@@ -78,6 +85,7 @@ public class MusicPlayer extends Application {
     // Initialize Others
     albumPicture = new ImageView();
     timeBar = new Slider();
+    st = new SliderRunnable(timeBar, mh.getMedia());
 
     // Initialize Buttons
     play = new Button("Play");

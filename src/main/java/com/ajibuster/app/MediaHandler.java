@@ -47,7 +47,12 @@ public class MediaHandler {
   }
 
   public MediaPlayer getPlayer () {
-    return player;
+    return this.player;
+  }
+
+  public Media getMedia () {
+    return this.media;
+    
   }
 
   public boolean isPlaying() {
