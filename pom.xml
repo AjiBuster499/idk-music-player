@@ -85,7 +85,7 @@
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.5</version>
           <configuration>
-            <mainClass>com.ajibuster.app.MusicPlayer</mainClass>
+            <mainClass>com.ajibuster.app.App</mainClass>
           </configuration>
         </plugin>
       </plugins>

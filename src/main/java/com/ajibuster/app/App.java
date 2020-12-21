@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  * Application
  *
  */
-public class MusicPlayer extends Application {
+public class App extends Application {
   // Global Items  
   protected BorderPane bPane;
   protected StackPane centerPane;
