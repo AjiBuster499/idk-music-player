@@ -7,12 +7,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class FileWindow {
-  private static Stage window = new Stage();
-  private static FileChooser fc = new FileChooser();
-  private static  MediaHandler mh;
+  private Stage window = new Stage();
+  private FileChooser fc = new FileChooser();
+  private  MediaHandler mh;
 
   public FileWindow(MediaHandler mh) {
-    FileWindow.mh = mh;
+    this.mh = mh;
     fc.getExtensionFilters().addAll(
       new FileChooser.ExtensionFilter("mp3 Files", "*.mp3"),
       new FileChooser.ExtensionFilter("All Files", "*.*")
@@ -20,6 +20,7 @@ public class FileWindow {
     );
   }
 
+  // TODO: Rework Display and openMusic they're ugly
   public MediaHandler display (String title) {
     File file = fc.showOpenDialog(window);
     if (file != null) {
@@ -29,11 +30,11 @@ public class FileWindow {
     return null;
   }
 
-  private static MediaHandler openMusic (File file) {
+  private MediaHandler openMusic (File file) {
     String filePath = file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
-    if (FileWindow.mh != null) {
-      if (FileWindow.mh.getPlayer() != null) {
-        FileWindow.mh.getPlayer().dispose();
+    if (mh != null) {
+      if (mh.getPlayer() != null) {
+        mh.getPlayer().dispose();
       }
     }
     mh = MediaHandler.changeSong("file://" + filePath);

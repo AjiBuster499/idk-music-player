@@ -9,12 +9,12 @@ public class BottomPane extends VBox {
   
   private HBox bottomButtons;
   private Button play, pause, stop;
-  private MusicPlayer musicPlayer;
+  private MusicPlayer mp;
 
   public BottomPane (MusicPlayer mp) {
     this.bottomButtons = new HBox();
 
-    this.musicPlayer = mp;
+    this.mp = mp;
 
     this.play = new Button("Play");
     this.pause = new Button("Pause");
@@ -30,14 +30,14 @@ public class BottomPane extends VBox {
   }
 
   private void handlePlay (ActionEvent aEvent) {
-
+    this.mp.getMediaHandler().playMusic();
   }
 
   private void handlePause (ActionEvent aEvent) {
-
+    this.mp.getMediaHandler().pauseMusic();
   }
 
   private void handleStop (ActionEvent aEvent) {
-
+    this.mp.getMediaHandler().stopMusic();
   }
 }

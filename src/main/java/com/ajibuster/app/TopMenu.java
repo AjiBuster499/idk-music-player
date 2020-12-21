@@ -10,9 +10,12 @@ public class TopMenu extends MenuBar {
 
   private Menu menuFile;
   private MenuItem open, exit;
+  private MusicPlayer mp;
 
-  public TopMenu () {
+  public TopMenu (MusicPlayer mp) {
     this.menuFile = new Menu("File");
+
+    this.mp = mp;
     
     this.open = new MenuItem("Open File...");
     this.exit = new MenuItem("Exit");
@@ -27,11 +30,12 @@ public class TopMenu extends MenuBar {
   }
 
   private void handleExit (ActionEvent aEvent) {
-
+    // TODO: ????
   }
 
   private void handleOpen (ActionEvent aEvent) {
-
+    FileWindow fw = new FileWindow(this.mp.getMediaHandler());
+    this.mp.setMediaHandler(fw.display("Open a File..."));
   }
   
 }
