@@ -7,7 +7,7 @@ public class MusicPlayer extends BorderPane {
   private TopMenu topMenu;
   private BottomPane bottomPane;
   private LeftPane leftPane;
-  private CenterPane albumWindow;
+  // private CenterPane albumWindow;
 
   private MediaHandler mh;
 
