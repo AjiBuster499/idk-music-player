@@ -1,5 +1,8 @@
 package com.ajibuster.app;
 
+import com.ajibuster.app.view.*;
+import com.ajibuster.app.model.*;
+
 import javafx.scene.layout.BorderPane;
 
 public class MusicPlayer extends BorderPane {
@@ -15,7 +18,7 @@ public class MusicPlayer extends BorderPane {
     this.topMenu = new TopMenu(this);
     this.bottomPane = new BottomPane(this);
     this.leftPane = new LeftPane();
-    this.albumWindow = new CenterPane();
+    // this.albumWindow = new CenterPane();
 
     this.mh = new MediaHandler();
 

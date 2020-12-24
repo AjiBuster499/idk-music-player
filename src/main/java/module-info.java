@@ -4,4 +4,6 @@ module com.ajibuster {
   requires javafx.graphics;
 
   exports com.ajibuster.app;
+  exports com.ajibuster.app.model;
+  exports com.ajibuster.app.view;
 }

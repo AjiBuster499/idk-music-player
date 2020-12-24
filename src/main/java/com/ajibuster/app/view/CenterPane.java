@@ -1,4 +1,4 @@
-package com.ajibuster.app;
+package com.ajibuster.app.view;
 
 import javafx.scene.layout.StackPane;
 

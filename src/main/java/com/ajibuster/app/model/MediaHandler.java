@@ -1,4 +1,4 @@
-package com.ajibuster.app;
+package com.ajibuster.app.model;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

@@ -1,4 +1,6 @@
-package com.ajibuster.app;
+package com.ajibuster.app.view;
+
+import com.ajibuster.app.MusicPlayer;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
