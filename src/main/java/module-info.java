@@ -6,4 +6,5 @@ module com.ajibuster {
   exports com.ajibuster.app;
   exports com.ajibuster.app.model;
   exports com.ajibuster.app.view;
+  exports com.ajibuster.app.viewmodel;
 }

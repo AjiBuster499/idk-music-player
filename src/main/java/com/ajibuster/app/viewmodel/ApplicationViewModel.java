@@ -1,4 +1,4 @@
-package com.ajibuster.app;
+package com.ajibuster.app.viewmodel;
 
 public class ApplicationViewModel {
   
