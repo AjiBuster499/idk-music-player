@@ -1,0 +1,3 @@
+Listener
+Play button -> adds a listener to the list
+When a change happens -> notify all listeners

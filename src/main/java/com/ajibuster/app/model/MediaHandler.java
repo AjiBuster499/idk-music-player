@@ -18,7 +18,13 @@ public class MediaHandler {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
     this.duration = this.media.getDuration().toSeconds();
-    // this.player.setAutoPlay(true);
+    this.player.setAutoPlay(true);
+  }
+
+  public void dispose () {
+    if (this.player != null) {
+      this.player.dispose();
+    }
   }
 
   public void playMusic() {
@@ -44,6 +50,7 @@ public class MediaHandler {
       public void run () {
         Image albumCover = (Image) player.getMedia().getMetadata().get("image");
         imageView.setImage(albumCover);
+        imageView.autosize();
       }
     });
   }

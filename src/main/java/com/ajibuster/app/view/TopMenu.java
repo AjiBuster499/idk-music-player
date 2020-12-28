@@ -37,8 +37,8 @@ public class TopMenu extends MenuBar {
   }
 
   private void handleOpen (ActionEvent aEvent) {
-    FileWindow fw = new FileWindow(this.mp.getMediaHandler());
-    this.mp.setMediaHandler(fw.display("Open a File..."));
+    FileWindow fw = new FileWindow();
+    this.mp.setMediaHandler(fw.openMusic());
   }
   
 }
