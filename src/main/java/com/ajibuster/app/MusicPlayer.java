@@ -10,7 +10,6 @@ public class MusicPlayer extends BorderPane {
   private TopMenu topMenu;
   private BottomPane bottomPane;
   private LeftPane leftPane;
-  // private CenterPane albumWindow;
 
   private MediaHandler mh;
 
@@ -18,7 +17,6 @@ public class MusicPlayer extends BorderPane {
     this.topMenu = new TopMenu(this);
     this.bottomPane = new BottomPane(this);
     this.leftPane = new LeftPane();
-    // this.albumWindow = new CenterPane();
 
     this.mh = new MediaHandler();
 

@@ -1,7 +1,5 @@
 package com.ajibuster.app.model;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -21,12 +19,6 @@ public class MediaHandler {
     this.player.setAutoPlay(true);
   }
 
-  public void dispose () {
-    if (this.player != null) {
-      this.player.dispose();
-    }
-  }
-
   public void playMusic() {
     player.play();
   }
@@ -43,17 +35,6 @@ public class MediaHandler {
     MediaHandler mh = new MediaHandler(fileName);
     return mh;
   }
-  
-  public void getAlbumCover (ImageView imageView) {
-    player.setOnReady(new Runnable () {
-      @Override
-      public void run () {
-        Image albumCover = (Image) player.getMedia().getMetadata().get("image");
-        imageView.setImage(albumCover);
-        imageView.autosize();
-      }
-    });
-  }
 
   public MediaPlayer getPlayer () {
     return this.player;
@@ -64,12 +45,8 @@ public class MediaHandler {
     
   }
 
-  public boolean isPlaying() {
-    if (player.getStatus() == Status.PLAYING) {
-      return true;
-    } else {
-      return false;
-    }
+  public boolean isPlaying () {
+    return player.getStatus() == Status.PLAYING ? true : false;
   }
 
 }
