@@ -1,5 +1,4 @@
-Create constant tasks (e.g. updating progress bar with duration)
-Adjust Sizing of items to ensure everything fits in the window
-Create Playlists
-Tap into file's metadata to display title, album cover, duration, album
+GOAL: Understand the Concept of Separation of Concerns
+
+1. Create an EventBus to connect all UI Components.
 

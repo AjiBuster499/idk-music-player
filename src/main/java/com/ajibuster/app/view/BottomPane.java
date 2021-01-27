@@ -32,6 +32,7 @@ public class BottomPane extends VBox {
   }
 
   private void handlePlay (ActionEvent aEvent) {
+    // TEST: EventBus implementation
     this.mp.getMediaHandler().playMusic();
   }
 
