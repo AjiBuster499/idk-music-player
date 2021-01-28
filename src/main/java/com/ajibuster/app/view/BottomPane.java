@@ -1,6 +1,5 @@
 package com.ajibuster.app.view;
 
-import com.ajibuster.app.MusicPlayer;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.events.PlayEvent;
 
@@ -15,7 +14,7 @@ public class BottomPane extends VBox {
   private Button play, pause, stop;
   private EventBus eventBus;
 
-  public BottomPane (MusicPlayer mp, EventBus eventBus) {
+  public BottomPane (EventBus eventBus) {
     this.bottomButtons = new HBox();
     this.eventBus = eventBus;
 

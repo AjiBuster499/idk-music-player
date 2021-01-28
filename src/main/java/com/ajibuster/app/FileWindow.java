@@ -1,7 +1,5 @@
 package com.ajibuster.app;
 
-import com.ajibuster.app.model.*;
-
 import java.io.File;
 import java.util.regex.Pattern;
 
@@ -24,13 +22,8 @@ public class FileWindow {
     this.file = fc.showOpenDialog(window);
   }
 
-  public MediaHandler openMusic () {
+  public String openMusic () {
     display("Open a music file...");
-    String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
-    // TODO: Fix This
-    // Pass around a MediaHandler?
-    MediaHandler mh = new MediaHandler();
-    mh = MediaHandler.changeSong("file://" + filePath); // TODO: Improve this
-    return mh;
+    return this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
   }
 }

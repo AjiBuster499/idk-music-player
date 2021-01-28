@@ -14,18 +14,12 @@ public class MediaHandler {
   public double duration;
   private EventBus eventBus;
 
-  public MediaHandler(EventBus eventBus) {
+  public MediaHandler(String filePath, EventBus eventBus) {
     this.eventBus = eventBus;
-  }
-
-  private MediaHandler(String filePath) {
     this.media = new Media(filePath);
     this.player = new MediaPlayer(media);
     this.duration = this.media.getDuration().toSeconds();
     this.player.setAutoPlay(true);
-    // Tell EventBus listen for play event
-    // eventbus.listen(PlayEvent, PlayEventListener);
-    // this.eventBus.listen();
     this.eventBus.listen(PlayEvent.class, new PlayEventListener());
   }
 
@@ -38,22 +32,12 @@ public class MediaHandler {
 
   }
 
-  // public void playMusic() {
-  //   // Listener for Play
-  //   player.play();
-  // }
-
   public void pauseMusic () {
     player.pause();
   }
 
   public void stopMusic () {
     player.stop();
-  }
-
-  public static MediaHandler changeSong(String fileName) {
-    MediaHandler mh = new MediaHandler(fileName);
-    return mh;
   }
 
   public MediaPlayer getPlayer () {

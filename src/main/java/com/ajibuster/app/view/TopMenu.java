@@ -1,7 +1,8 @@
 package com.ajibuster.app.view;
 
 import com.ajibuster.app.FileWindow;
-import com.ajibuster.app.MusicPlayer;
+import com.ajibuster.app.eventbus.EventBus;
+import com.ajibuster.app.eventbus.events.OpenEvent;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -13,12 +14,13 @@ public class TopMenu extends MenuBar {
 
   private Menu menuFile;
   private MenuItem open, exit;
-  private MusicPlayer mp;
+  private EventBus eventBus;
+  private String musicPath;
 
-  public TopMenu (MusicPlayer mp) {
+  public TopMenu (EventBus eventBus) {
     this.menuFile = new Menu("File");
 
-    this.mp = mp;
+    this.eventBus = eventBus;
     
     this.open = new MenuItem("Open File...");
     this.exit = new MenuItem("Exit");
@@ -38,7 +40,12 @@ public class TopMenu extends MenuBar {
 
   private void handleOpen (ActionEvent aEvent) {
     FileWindow fw = new FileWindow();
-    this.mp.setMediaHandler(fw.openMusic());
+    this.musicPath = fw.openMusic();
+    this.eventBus.emit(new OpenEvent());
+  }
+
+  public String getMusicPath () {
+    return this.musicPath;
   }
   
 }
