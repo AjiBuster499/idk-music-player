@@ -4,4 +4,8 @@ import com.ajibuster.app.eventbus.Event;
 
 class StopEvent implements Event {
   private String value = "Stop";
+
+  public String getValue () {
+    return this.value;
+  }
 }

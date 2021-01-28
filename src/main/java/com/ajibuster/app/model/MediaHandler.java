@@ -1,6 +1,8 @@
 package com.ajibuster.app.model;
 
+import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
+import com.ajibuster.app.eventbus.events.PlayEvent;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -10,8 +12,10 @@ public class MediaHandler {
   private MediaPlayer player;
   private Media media;
   public double duration;
+  private EventBus eventBus;
 
-  public MediaHandler() {
+  public MediaHandler(EventBus eventBus) {
+    this.eventBus = eventBus;
   }
 
   private MediaHandler(String filePath) {
@@ -21,27 +25,23 @@ public class MediaHandler {
     this.player.setAutoPlay(true);
     // Tell EventBus listen for play event
     // eventbus.listen(PlayEvent, PlayEventListener);
+    // this.eventBus.listen();
+    this.eventBus.listen(PlayEvent.class, new PlayEventListener());
   }
-
-  // private class PlayEventListener implements EventListener<PlayEvent>
-  //  handle(PlayEvent) {
-  //    player.play();
-  //  }
 
   private class PlayEventListener implements EventListener<PlayEvent> {
 
     @Override
     public void handle(PlayEvent event) {
-      // TODO Auto-generated method stub
-
+      player.play();
     }
 
   }
 
-  public void playMusic() {
-    // Listener for Play
-    player.play();
-  }
+  // public void playMusic() {
+  //   // Listener for Play
+  //   player.play();
+  // }
 
   public void pauseMusic () {
     player.pause();

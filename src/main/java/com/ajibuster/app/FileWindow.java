@@ -27,8 +27,10 @@ public class FileWindow {
   public MediaHandler openMusic () {
     display("Open a music file...");
     String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
+    // TODO: Fix This
+    // Pass around a MediaHandler?
     MediaHandler mh = new MediaHandler();
-    mh = MediaHandler.changeSong("file://" + filePath);
+    mh = MediaHandler.changeSong("file://" + filePath); // TODO: Improve this
     return mh;
   }
 }

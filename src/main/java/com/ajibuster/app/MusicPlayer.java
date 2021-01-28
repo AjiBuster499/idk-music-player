@@ -21,7 +21,7 @@ public class MusicPlayer extends BorderPane {
     this.bottomPane = new BottomPane(this, eventBus);
     this.leftPane = new LeftPane();
 
-    this.mh = new MediaHandler();
+    this.mh = new MediaHandler(this.eventBus);
 
     this.setTop(this.topMenu);
     this.setLeft(this.leftPane);

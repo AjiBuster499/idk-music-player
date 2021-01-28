@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class EventBus {
-
   private Map<Class, List<EventListener>> listeners = new HashMap<>();
   
   public void emit(Event event) {
