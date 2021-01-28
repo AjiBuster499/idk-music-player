@@ -42,15 +42,6 @@ public class MediaHandler {
     player.stop();
   }
 
-  public MediaPlayer getPlayer () {
-    return this.player;
-  }
-
-  public Media getMedia () {
-    return this.media;
-    
-  }
-
   public boolean isPlaying () {
     return player.getStatus() == Status.PLAYING ? true : false;
   }
