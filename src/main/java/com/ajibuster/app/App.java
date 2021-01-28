@@ -1,5 +1,8 @@
 package com.ajibuster.app;
 
+import com.ajibuster.app.eventbus.EventBus;
+import com.ajibuster.app.model.MediaHandler;
+
 // JavaFX Imports
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -18,8 +21,12 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     primaryStage.setTitle("IDK Music Player");
+    
+    EventBus eventBus = new EventBus();
 
-    MusicPlayer mp = new MusicPlayer();
+    MediaHandler mediaHandler = new MediaHandler(eventBus);
+
+    MusicPlayer mp = new MusicPlayer(mediaHandler, eventBus);
 
     Scene scene = new Scene(mp, 800, 800);
 

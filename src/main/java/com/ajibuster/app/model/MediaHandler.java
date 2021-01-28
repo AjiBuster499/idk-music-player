@@ -12,15 +12,9 @@ public class MediaHandler {
   private MediaPlayer player;
   private Media media;
   public double duration;
-  private EventBus eventBus;
 
-  public MediaHandler(String filePath, EventBus eventBus) {
-    this.eventBus = eventBus;
-    this.media = new Media(filePath);
-    this.player = new MediaPlayer(media);
-    this.duration = this.media.getDuration().toSeconds();
-    this.player.setAutoPlay(true);
-    this.eventBus.listen(PlayEvent.class, new PlayEventListener());
+  public MediaHandler (EventBus eventBus) {
+    eventBus.listen(PlayEvent.class, new PlayEventListener());
   }
 
   private class PlayEventListener implements EventListener<PlayEvent> {
@@ -30,6 +24,14 @@ public class MediaHandler {
       player.play();
     }
 
+  }
+
+  public void createNewPlayer(String filePath) {
+    if (this.player != null) {
+      this.player.dispose();
+    }
+    this.media = new Media(filePath);
+    this.player = new MediaPlayer(this.media);
   }
 
   public void pauseMusic () {

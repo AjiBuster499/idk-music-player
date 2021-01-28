@@ -13,29 +13,20 @@ public class MusicPlayer extends BorderPane {
   private TopMenu topMenu;
   private BottomPane bottomPane;
   private LeftPane leftPane;
-  private EventBus eventBus;
 
-  private MediaHandler mh;
+  private MediaHandler mediaHandler;
 
-  public MusicPlayer() {
-    this.eventBus = new EventBus();
-    this.topMenu = new TopMenu(this.eventBus);
+  public MusicPlayer(MediaHandler mediaHandler, EventBus eventBus) {
+    this.topMenu = new TopMenu(eventBus);
     this.bottomPane = new BottomPane(eventBus);
     this.leftPane = new LeftPane();
+    this.mediaHandler = mediaHandler;
 
     this.setTop(this.topMenu);
     this.setLeft(this.leftPane);
     this.setBottom(this.bottomPane);
 
-    this.eventBus.listen(OpenEvent.class, new OpenEventListener());
-  }
-
-  public MediaHandler getMediaHandler() {
-    return this.mh;
-  }
-
-  public void setMediaHandler(MediaHandler mh) {
-    this.mh = mh;
+    eventBus.listen(OpenEvent.class, new OpenEventListener());
   }
 
   private class OpenEventListener implements EventListener<OpenEvent> {
@@ -43,12 +34,7 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenEvent event) {
       // Generate new Media
-      // if there is a player, dispose of it.
-      // If not, then create a new mediaHandler
-      if (mh.getPlayer() != null) {
-        mh.getPlayer().dispose();
-      }
-      mh = new MediaHandler(topMenu.getMusicPath(), eventBus);
+      mediaHandler.createNewPlayer(topMenu.getMusicPath());
 
     }
     

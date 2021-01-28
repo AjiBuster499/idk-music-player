@@ -24,6 +24,7 @@ public class FileWindow {
 
   public String openMusic () {
     display("Open a music file...");
-    return this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
+    String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
+    return "file://" + filePath;
   }
 }
