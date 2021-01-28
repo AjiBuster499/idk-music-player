@@ -2,7 +2,7 @@ package com.ajibuster.app.model;
 
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
-import com.ajibuster.app.eventbus.events.PlayEvent;
+import com.ajibuster.app.eventbus.events.*;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -15,15 +15,27 @@ public class MediaHandler {
 
   public MediaHandler (EventBus eventBus) {
     eventBus.listen(PlayEvent.class, new PlayEventListener());
+    eventBus.listen(PauseEvent.class, new PauseEventListener());
+    eventBus.listen(StopEvent.class, new StopEventListener());
   }
 
   private class PlayEventListener implements EventListener<PlayEvent> {
-
     @Override
     public void handle(PlayEvent event) {
       player.play();
     }
-
+  }
+  private class PauseEventListener implements EventListener<PauseEvent> {
+    @Override
+    public void handle(PauseEvent event) {
+      player.pause();
+    }
+  }
+  private class StopEventListener implements EventListener<StopEvent> {
+    @Override
+    public void handle(StopEvent event) {
+      player.stop();
+    }
   }
 
   public void createNewPlayer(String filePath) {
@@ -32,14 +44,6 @@ public class MediaHandler {
     }
     this.media = new Media(filePath);
     this.player = new MediaPlayer(this.media);
-  }
-
-  public void pauseMusic () {
-    player.pause();
-  }
-
-  public void stopMusic () {
-    player.stop();
   }
 
   public boolean isPlaying () {

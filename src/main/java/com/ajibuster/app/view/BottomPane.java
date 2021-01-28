@@ -1,7 +1,7 @@
 package com.ajibuster.app.view;
 
 import com.ajibuster.app.eventbus.EventBus;
-import com.ajibuster.app.eventbus.events.PlayEvent;
+import com.ajibuster.app.eventbus.events.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -23,8 +23,8 @@ public class BottomPane extends VBox {
     this.stop = new Button("Stop");
 
     this.play.setOnAction(this::handlePlay);
-    // this.pause.setOnAction(this::handlePause);
-    // this.stop.setOnAction(this::handleStop);
+    this.pause.setOnAction(this::handlePause);
+    this.stop.setOnAction(this::handleStop);
 
     this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop);
     this.getChildren().addAll(this.bottomButtons);
@@ -33,5 +33,13 @@ public class BottomPane extends VBox {
 
   private void handlePlay(ActionEvent aEvent) {
     this.eventBus.emit(new PlayEvent());
+  }
+
+  private void handlePause (ActionEvent aEvent) {
+    this.eventBus.emit(new PauseEvent());
+  }
+
+  private void handleStop (ActionEvent aEvent) {
+    this.eventBus.emit(new StopEvent());
   }
 }
