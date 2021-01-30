@@ -11,9 +11,12 @@ import javafx.scene.media.MediaPlayer.Status;
 public class MediaHandler {
   private MediaPlayer player;
   private Media media;
-  public double duration;
+
+  private EventBus eventBus;
 
   public MediaHandler (EventBus eventBus) {
+    this.eventBus = eventBus;
+
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
@@ -44,10 +47,19 @@ public class MediaHandler {
     }
     this.media = new Media(filePath);
     this.player = new MediaPlayer(this.media);
-  }
+    this.player.setOnPlaying(() -> {
+      startTime();
+    });
+    }
 
   public boolean isPlaying () {
     return player.getStatus() == Status.PLAYING ? true : false;
   }
 
+  public void startTime () {
+    while(this.player.getCurrentTime().toMillis() < this.player.getStopTime().toMillis() &&
+          this.player.getStatus() == Status.PLAYING) {
+      this.eventBus.emit(new CurrentTimeEvent());
+    }
+  }
 }

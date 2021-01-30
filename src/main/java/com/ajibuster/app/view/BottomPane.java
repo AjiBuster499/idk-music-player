@@ -12,6 +12,7 @@ public class BottomPane extends VBox {
   
   private HBox bottomButtons;
   private Button play, pause, stop;
+  private SeekBar seekBar;
   private EventBus eventBus;
 
   public BottomPane (EventBus eventBus) {
@@ -21,13 +22,14 @@ public class BottomPane extends VBox {
     this.play = new Button("Play");
     this.pause = new Button("Pause");
     this.stop = new Button("Stop");
+    this.seekBar = new SeekBar(this.eventBus);
 
     this.play.setOnAction(this::handlePlay);
     this.pause.setOnAction(this::handlePause);
     this.stop.setOnAction(this::handleStop);
 
     this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop);
-    this.getChildren().addAll(this.bottomButtons);
+    this.getChildren().addAll(this.bottomButtons, this.seekBar);
 
   }
 

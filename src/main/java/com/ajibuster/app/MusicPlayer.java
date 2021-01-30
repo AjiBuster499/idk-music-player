@@ -35,7 +35,6 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenEvent event) {
       // Generate new Media
       mediaHandler.createNewPlayer(topMenu.getMusicPath());
-
     }
     
   }
