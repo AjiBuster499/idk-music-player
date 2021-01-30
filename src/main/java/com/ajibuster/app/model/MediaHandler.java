@@ -14,7 +14,7 @@ public class MediaHandler {
 
   private EventBus eventBus;
 
-  public MediaHandler (EventBus eventBus) {
+  public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
 
     eventBus.listen(PlayEvent.class, new PlayEventListener());
@@ -28,12 +28,14 @@ public class MediaHandler {
       player.play();
     }
   }
+
   private class PauseEventListener implements EventListener<PauseEvent> {
     @Override
     public void handle(PauseEvent event) {
       player.pause();
     }
   }
+
   private class StopEventListener implements EventListener<StopEvent> {
     @Override
     public void handle(StopEvent event) {
@@ -50,16 +52,18 @@ public class MediaHandler {
     this.player.setOnPlaying(() -> {
       startTime();
     });
-    }
-
-  public boolean isPlaying () {
-    return player.getStatus() == Status.PLAYING ? true : false;
   }
 
-  public void startTime () {
-    while(this.player.getCurrentTime().toMillis() < this.player.getStopTime().toMillis() &&
-          this.player.getStatus() == Status.PLAYING) {
-      this.eventBus.emit(new CurrentTimeEvent());
+  public void startTime() {
+    while (player.getCurrentTime().toMillis() < player.getStopTime().toMillis()
+        && player.getStatus() == Status.PLAYING) {
+      double time = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
+      eventBus.emit(new CurrentTimeEvent(time));
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
   }
 }

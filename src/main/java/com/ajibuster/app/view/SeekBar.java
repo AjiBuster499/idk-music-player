@@ -16,7 +16,7 @@ public class SeekBar extends Slider {
 
     @Override
     public void handle(CurrentTimeEvent event) {
-      
+      System.out.println(event.getTime());
     }
     
   }
