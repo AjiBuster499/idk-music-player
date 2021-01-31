@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 public class BottomPane extends VBox {
   
   private HBox bottomButtons;
-  private Button play, pause, stop;
+  private Button play, pause, stop, forward, rewind;
   private SeekBar seekBar;
   private EventBus eventBus;
 
@@ -22,18 +22,22 @@ public class BottomPane extends VBox {
     this.play = new Button("Play");
     this.pause = new Button("Pause");
     this.stop = new Button("Stop");
+    this.forward = new Button("Forward");
+    this.rewind = new Button("Rewind");
     this.seekBar = new SeekBar(this.eventBus);
 
     this.play.setOnAction(this::handlePlay);
     this.pause.setOnAction(this::handlePause);
     this.stop.setOnAction(this::handleStop);
+    this.forward.setOnAction(this::handleForward);
+    this.rewind.setOnAction(this::handleRewind);
 
-    this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop);
+    this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop, this.forward, this.rewind);
     this.getChildren().addAll(this.bottomButtons, this.seekBar);
 
   }
 
-  private void handlePlay(ActionEvent aEvent) {
+  private void handlePlay (ActionEvent aEvent) {
     this.eventBus.emit(new PlayEvent());
   }
 
@@ -43,5 +47,13 @@ public class BottomPane extends VBox {
 
   private void handleStop (ActionEvent aEvent) {
     this.eventBus.emit(new StopEvent());
+  }
+
+  private void handleForward (ActionEvent aEvent) {
+    this.eventBus.emit(new ForwardEvent());
+  }
+
+  private void handleRewind (ActionEvent aEvent) {
+    this.eventBus.emit(new RewindEvent());
   }
 }

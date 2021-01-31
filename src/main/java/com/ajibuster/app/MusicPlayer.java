@@ -13,6 +13,7 @@ public class MusicPlayer extends BorderPane {
   private TopMenu topMenu;
   private BottomPane bottomPane;
   private LeftPane leftPane;
+  private CenterPane centerPane;
 
   private MediaHandler mediaHandler;
 
@@ -20,11 +21,15 @@ public class MusicPlayer extends BorderPane {
     this.topMenu = new TopMenu(eventBus);
     this.bottomPane = new BottomPane(eventBus);
     this.leftPane = new LeftPane();
+    this.centerPane = new CenterPane();
     this.mediaHandler = mediaHandler;
 
-    this.setTop(this.topMenu);
+    this.setCenter(this.centerPane);
     this.setLeft(this.leftPane);
+    this.setTop(this.topMenu);
     this.setBottom(this.bottomPane);
+    
+    
 
     eventBus.listen(OpenEvent.class, new OpenEventListener());
   }
@@ -35,6 +40,9 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenEvent event) {
       // Generate new Media
       mediaHandler.createNewPlayer(topMenu.getMusicPath());
+      mediaHandler.getPlayer().setOnReady(() -> {
+        centerPane.addImageView(mediaHandler.getAlbumArt());
+      });
     }
     
   }

@@ -5,6 +5,8 @@ import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
 
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -21,10 +23,14 @@ public class MediaHandler {
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
 
+    // That's a lot of listening.
+    // Good thing computers can listen better than humans.
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
     eventBus.listen(SeekTimeEvent.class, new SeekTimeEventListener());
+    eventBus.listen(ForwardEvent.class, new ForwardEventListener());
+    eventBus.listen(RewindEvent.class, new RewindEventListener());
   }
 
   private class PlayEventListener implements EventListener<PlayEvent> {
@@ -38,14 +44,12 @@ public class MediaHandler {
       player.play();
     }
   }
-
   private class PauseEventListener implements EventListener<PauseEvent> {
     @Override
     public void handle(PauseEvent event) {
       player.pause();
     }
   }
-
   private class StopEventListener implements EventListener<StopEvent> {
     @Override
     public void handle(StopEvent event) {
@@ -58,7 +62,6 @@ public class MediaHandler {
       }
     }
   }
-
   private class SeekTimeEventListener implements EventListener<SeekTimeEvent> {
 
     @Override
@@ -67,6 +70,26 @@ public class MediaHandler {
       Duration seekTime = new Duration(rawTime * 1000); // Convert rawTime to Millis
       System.out.println(seekTime);
       player.seek(seekTime);
+    }
+
+  }
+  private class RewindEventListener implements EventListener<RewindEvent> {
+
+    @Override
+    public void handle(RewindEvent event) {
+      Duration rewindTime = player.getCurrentTime().subtract(new Duration(5000));
+      player.seek(rewindTime);
+
+    }
+
+  }
+  private class ForwardEventListener implements EventListener<ForwardEvent> {
+
+    @Override
+    public void handle(ForwardEvent event) {
+      Duration forwardTime = player.getCurrentTime().add(new Duration(5000));
+      player.seek(forwardTime);
+
     }
 
   }
@@ -107,5 +130,13 @@ public class MediaHandler {
     timeThread = new Thread(task);
     timeThread.setDaemon(true);
     timeThread.start();
+  }
+
+  public ImageView getAlbumArt () {
+    return new ImageView((Image) this.media.getMetadata().get("image"));
+  }
+
+  public MediaPlayer getPlayer () {
+    return this.player;
   }
 }
