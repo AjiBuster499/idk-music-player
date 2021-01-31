@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.util.Duration;
 
 public class MediaHandler {
   private MediaPlayer player;
@@ -23,6 +24,7 @@ public class MediaHandler {
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
+    eventBus.listen(SeekTimeEvent.class, new SeekTimeEventListener());
   }
 
   private class PlayEventListener implements EventListener<PlayEvent> {
@@ -49,12 +51,24 @@ public class MediaHandler {
     public void handle(StopEvent event) {
       player.stop();
       try {
-        timeThread.join(1000);
+        timeThread.join(650);
       } catch (InterruptedException e) {
         System.out.println("Interrupted: ");
         e.printStackTrace();
       }
     }
+  }
+
+  private class SeekTimeEventListener implements EventListener<SeekTimeEvent> {
+
+    @Override
+    public void handle(SeekTimeEvent event) {
+      double rawTime = (event.getTimePercentage() * player.getStopTime().toSeconds()); // In Seconds
+      Duration seekTime = new Duration(rawTime * 1000); // Convert rawTime to Millis
+      System.out.println(seekTime);
+      player.seek(seekTime);
+    }
+
   }
 
   public void createNewPlayer(String filePath) {
@@ -78,7 +92,7 @@ public class MediaHandler {
           double time = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
           eventBus.emit(new CurrentTimeEvent(time));
           try {
-            Thread.sleep(500);
+            Thread.sleep(650);
           } catch (InterruptedException ie) {
             System.out.println("Interrupted.");
             ie.printStackTrace();
