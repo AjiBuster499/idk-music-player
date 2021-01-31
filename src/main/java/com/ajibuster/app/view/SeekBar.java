@@ -10,13 +10,14 @@ public class SeekBar extends Slider {
 
   public SeekBar (EventBus eventBus) {
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
+    this.setMax(1);
   }
 
   private class CurrentTimeEventListener implements EventListener<CurrentTimeEvent> {
 
     @Override
     public void handle(CurrentTimeEvent event) {
-      System.out.println(event.getTime());
+      setValue(event.getTime());
     }
     
   }
