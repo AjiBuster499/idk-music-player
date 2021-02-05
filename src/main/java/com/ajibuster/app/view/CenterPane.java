@@ -11,6 +11,7 @@ public class CenterPane extends StackPane {
   }
 
   public void addImageView (ImageView iv) {
+    this.getChildren().clear();
     this.getChildren().add(iv);
   }
   

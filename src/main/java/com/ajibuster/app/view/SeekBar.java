@@ -2,8 +2,7 @@ package com.ajibuster.app.view;
 
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
-import com.ajibuster.app.eventbus.events.CurrentTimeEvent;
-import com.ajibuster.app.eventbus.events.SeekTimeEvent;
+import com.ajibuster.app.eventbus.events.*;
 
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +15,7 @@ public class SeekBar extends Slider {
     this.eventBus = eventBus;
 
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
+    eventBus.listen(ClearTimeEvent.class, new ClearTimeEventListener());
 
     this.setOnMouseClicked(this::seekTime);
     this.setOnMouseDragReleased(this::seekTime);
@@ -30,6 +30,17 @@ public class SeekBar extends Slider {
       setValue(event.getTime());
     }
     
+  }
+
+  private class ClearTimeEventListener implements EventListener<ClearTimeEvent> {
+
+    @Override
+    public void handle(ClearTimeEvent event) {
+      System.out.println("Clear Event Received.");
+      setValue(0);
+
+    }
+
   }
 
   private void seekTime (MouseEvent event) {

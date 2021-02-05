@@ -37,6 +37,7 @@ public class MediaHandler {
     @Override
     public void handle(PlayEvent event) {
       if (player.getStatus() == Status.STOPPED) {
+        // Stopped issues Make sure song resets or something
         player.setOnPlaying(() -> {
           startTime();
         });
@@ -54,12 +55,8 @@ public class MediaHandler {
     @Override
     public void handle(StopEvent event) {
       player.stop();
-      try {
-        timeThread.join(650);
-      } catch (InterruptedException e) {
-        System.out.println("Interrupted: ");
-        e.printStackTrace();
-      }
+      eventBus.emit(new ClearTimeEvent());
+      timeThread.interrupt();
     }
   }
   private class SeekTimeEventListener implements EventListener<SeekTimeEvent> {
@@ -68,7 +65,6 @@ public class MediaHandler {
     public void handle(SeekTimeEvent event) {
       double rawTime = (event.getTimePercentage() * player.getStopTime().toSeconds()); // In Seconds
       Duration seekTime = new Duration(rawTime * 1000); // Convert rawTime to Millis
-      System.out.println(seekTime);
       player.seek(seekTime);
     }
 
@@ -110,17 +106,14 @@ public class MediaHandler {
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
-        while (player.getCurrentTime().toSeconds() < player.getStopTime().toSeconds()
-        && player.getStatus() == Status.PLAYING) {
-          double time = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
-          eventBus.emit(new CurrentTimeEvent(time));
+        while (player.getCurrentTime().lessThanOrEqualTo(player.getStopTime()) && player.getStatus() == Status.PLAYING) {
+          double timePercentage = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
+          eventBus.emit(new CurrentTimeEvent(timePercentage));
           try {
-            Thread.sleep(650);
-          } catch (InterruptedException ie) {
-            System.out.println("Interrupted.");
-            ie.printStackTrace();
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            System.out.println("Thread " + Thread.currentThread().getName() + " interrupted.");
             cancel();
-            break;
           }
         }
         return null;
