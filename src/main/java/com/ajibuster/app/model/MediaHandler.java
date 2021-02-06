@@ -37,7 +37,6 @@ public class MediaHandler {
     @Override
     public void handle(PlayEvent event) {
       if (player.getStatus() == Status.STOPPED) {
-        // Stopped issues Make sure song resets or something
         player.setOnPlaying(() -> {
           startTime();
         });
@@ -55,7 +54,6 @@ public class MediaHandler {
     @Override
     public void handle(StopEvent event) {
       player.stop();
-      eventBus.emit(new ClearTimeEvent());
       timeThread.interrupt();
     }
   }
@@ -75,7 +73,6 @@ public class MediaHandler {
     public void handle(RewindEvent event) {
       Duration rewindTime = player.getCurrentTime().subtract(new Duration(5000));
       player.seek(rewindTime);
-
     }
 
   }
@@ -98,7 +95,13 @@ public class MediaHandler {
     this.player = new MediaPlayer(this.media);
     this.player.setAutoPlay(true);
     this.player.setOnPlaying(() -> {
+      // Start Tracking Time
       startTime();
+    });
+    this.player.setOnEndOfMedia(() -> {
+      // Reset Time. Stop Media.
+      player.seek(Duration.valueOf("0.0ms"));
+      player.stop();
     });
   }
 

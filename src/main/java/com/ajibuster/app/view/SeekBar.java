@@ -15,7 +15,6 @@ public class SeekBar extends Slider {
     this.eventBus = eventBus;
 
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
-    eventBus.listen(ClearTimeEvent.class, new ClearTimeEventListener());
 
     this.setOnMouseClicked(this::seekTime);
     this.setOnMouseDragReleased(this::seekTime);
@@ -30,17 +29,6 @@ public class SeekBar extends Slider {
       setValue(event.getTime());
     }
     
-  }
-
-  private class ClearTimeEventListener implements EventListener<ClearTimeEvent> {
-
-    @Override
-    public void handle(ClearTimeEvent event) {
-      System.out.println("Clear Event Received.");
-      setValue(0);
-
-    }
-
   }
 
   private void seekTime (MouseEvent event) {
