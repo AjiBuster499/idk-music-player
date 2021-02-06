@@ -27,12 +27,11 @@ public class App extends Application {
     MusicPlayer mp = new MusicPlayer(mediaHandler, eventBus);
 
     Scene scene = new Scene(mp, 800, 800);
-    mp.getBottom().prefHeight(scene.getHeight() * 0.1);
     mp.getTop().prefHeight(scene.getHeight() * 0.1);
+    mp.getBottom().prefHeight(scene.getHeight() * 0.1);
     mp.getLeft().prefWidth(scene.getWidth() * 0.2);
     mp.getCenter().prefWidth(scene.getWidth() * 0.8);
-    mp.getCenter().prefHeight(scene.getHeight() * 0.85);
-
+    mp.getCenter().prefHeight(scene.getHeight() * 0.8);
     primaryStage.setScene(scene);
     primaryStage.show();
   }

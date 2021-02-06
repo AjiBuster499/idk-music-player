@@ -24,12 +24,13 @@ public class MusicPlayer extends BorderPane {
     this.centerPane = new CenterPane();
     this.mediaHandler = mediaHandler;
 
+    this.leftPane.setStyle("-fx-border-style: hidden solid hidden hidden; -fx-border-color: black");
+    // CLEANUP: Create a .css and put style in there.
+
     this.setCenter(this.centerPane);
     this.setLeft(this.leftPane);
     this.setTop(this.topMenu);
     this.setBottom(this.bottomPane);
-    
-    
 
     eventBus.listen(OpenEvent.class, new OpenEventListener());
   }
