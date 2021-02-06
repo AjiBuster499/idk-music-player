@@ -8,6 +8,9 @@ public class CenterPane extends StackPane {
 
   public CenterPane () {
     // Blank Pane for first opening
+    this.setOnMouseClicked(e -> {
+      System.out.println("You Clicked On Center");
+    });
   }
 
   public void addImageView (ImageView iv) {

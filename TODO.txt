@@ -1,5 +1,6 @@
 GOAL: Understand the Concept of Separation of Concerns
 
 1. Formalize GUI
+1a. Research Borders.
 2. Album Art doesn't dominate the window.
 

@@ -23,12 +23,15 @@ public class App extends Application {
     primaryStage.setTitle("IDK Music Player");
     
     EventBus eventBus = new EventBus();
-
     MediaHandler mediaHandler = new MediaHandler(eventBus);
-
     MusicPlayer mp = new MusicPlayer(mediaHandler, eventBus);
 
     Scene scene = new Scene(mp, 800, 800);
+    mp.getBottom().prefHeight(scene.getHeight() * 0.1);
+    mp.getTop().prefHeight(scene.getHeight() * 0.1);
+    mp.getLeft().prefWidth(scene.getWidth() * 0.2);
+    mp.getCenter().prefWidth(scene.getWidth() * 0.8);
+    mp.getCenter().prefHeight(scene.getHeight() * 0.85);
 
     primaryStage.setScene(scene);
     primaryStage.show();
