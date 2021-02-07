@@ -9,10 +9,6 @@ public class LeftPane extends VBox {
     Label test = new Label("This is a Test");
 
     this.getChildren().add(test);
-
-    this.setOnMouseClicked(e -> {
-      System.out.println("You Clicked On Left");
-    });
   }
   
 }

@@ -33,6 +33,7 @@ public class MediaHandler {
     eventBus.listen(RewindEvent.class, new RewindEventListener());
   }
 
+  // The World's Supply of Event Listeners
   private class PlayEventListener implements EventListener<PlayEvent> {
     @Override
     public void handle(PlayEvent event) {
@@ -87,10 +88,14 @@ public class MediaHandler {
 
   }
 
+  // Generates a new Media Player
   public void createNewPlayer(String filePath) {
+    // If there's a player, dispose of it.
     if (this.player != null) {
       this.player.dispose();
     }
+
+    // Generation
     this.media = new Media(filePath);
     this.player = new MediaPlayer(this.media);
     this.player.setAutoPlay(true);
@@ -106,6 +111,7 @@ public class MediaHandler {
   }
 
   private void startTime() {
+    // Task to track the time on a separate thread.
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
@@ -129,7 +135,9 @@ public class MediaHandler {
   }
 
   public ImageView getAlbumArt () {
-    return new ImageView((Image) this.media.getMetadata().get("image"));
+    // Fetches Album Cover from metadata.
+    ImageView iv = new ImageView((Image) this.media.getMetadata().get("image"));
+    return iv;
   }
 
   public MediaPlayer getPlayer () {

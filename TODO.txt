@@ -1,9 +1,5 @@
 GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Player. Develop a strong understanding of JavaFX and it's tools.
 
-1. Formalize GUI
-1a. Research Borders.
-
-2. Album Art doesn't dominate the window.
 
 3. Add to the GUI:
 3a. Volume (buttons then a slider)
