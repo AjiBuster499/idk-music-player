@@ -25,12 +25,15 @@ public class MediaHandler {
 
     // That's a lot of listening.
     // Good thing computers can listen better than humans.
+    // TODO CLEANUP: simplify this.
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
     eventBus.listen(SeekTimeEvent.class, new SeekTimeEventListener());
     eventBus.listen(ForwardEvent.class, new ForwardEventListener());
     eventBus.listen(RewindEvent.class, new RewindEventListener());
+    eventBus.listen(VolumeUpEvent.class, new VolumeUpEventListener());
+    eventBus.listen(VolumeDownEvent.class, new VolumeDownEventListener());
   }
 
   // The World's Supply of Event Listeners
@@ -83,6 +86,24 @@ public class MediaHandler {
     public void handle(ForwardEvent event) {
       Duration forwardTime = player.getCurrentTime().add(new Duration(5000));
       player.seek(forwardTime);
+
+    }
+
+  }
+  private class VolumeUpEventListener implements EventListener<VolumeUpEvent> {
+
+    @Override
+    public void handle(VolumeUpEvent event) {
+      player.setVolume(player.getVolume() + 0.05);
+
+    }
+
+  }
+  private class VolumeDownEventListener implements EventListener<VolumeDownEvent> {
+
+    @Override
+    public void handle(VolumeDownEvent event) {
+      player.setVolume(player.getVolume() - 0.05);
 
     }
 
