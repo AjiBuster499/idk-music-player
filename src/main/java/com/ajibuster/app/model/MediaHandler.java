@@ -23,9 +23,9 @@ public class MediaHandler {
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
 
-    // That's a lot of listening.
-    // Good thing computers can listen better than humans.
     // TODO CLEANUP: simplify this.
+    // TO WHOEVER READS THIS MESS:
+    // It's just establishing listeners. Carry On.
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
@@ -95,6 +95,15 @@ public class MediaHandler {
     @Override
     public void handle(VolumeUpEvent event) {
       player.setVolume(player.getVolume() + 0.05);
+      // TODO CLEANUP: Fix this crap
+      // Then Do the Same Below
+      if (player.getVolume() <= 1) {
+        eventBus.emit(new VolumeChangedEvent(player.getVolume()));
+      }
+      if (player.getVolume() > 1) {
+        return;
+      }
+      
 
     }
 
@@ -104,6 +113,7 @@ public class MediaHandler {
     @Override
     public void handle(VolumeDownEvent event) {
       player.setVolume(player.getVolume() - 0.05);
+      eventBus.emit(new VolumeChangedEvent(player.getVolume()));
 
     }
 

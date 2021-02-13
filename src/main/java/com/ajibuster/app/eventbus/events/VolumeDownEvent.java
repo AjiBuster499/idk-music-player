@@ -4,7 +4,7 @@ import com.ajibuster.app.eventbus.Event;
 
 public class VolumeDownEvent implements Event {
 
-  private String value = "Volume Down";
+  private String value = "VolumeDown";
 
   public String getValue () {
     return this.value;

@@ -1,10 +1,13 @@
 package com.ajibuster.app.view;
 
+import com.ajibuster.app.eventbus.Event;
 import com.ajibuster.app.eventbus.EventBus;
+import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -12,6 +15,7 @@ public class BottomPane extends VBox {
   
   private HBox bottomButtons;
   private Button play, pause, stop, forward, rewind, volumeUp, volumeDown;
+  private Label volume, time;
   private SeekBar seekBar;
   private EventBus eventBus;
 
@@ -28,45 +32,41 @@ public class BottomPane extends VBox {
     this.volumeDown = new Button("-");
     this.seekBar = new SeekBar(this.eventBus);
 
-    // TODO CLEANUP: Simplify this
-    this.play.setOnAction(this::handlePlay);
-    this.pause.setOnAction(this::handlePause);
-    this.stop.setOnAction(this::handleStop);
-    this.forward.setOnAction(this::handleForward);
-    this.rewind.setOnAction(this::handleRewind);
-    this.volumeUp.setOnAction(this::handleVolumeUp);
-    this.volumeDown.setOnAction(this::handleVolumeDown);
+    this.volume = new Label("Vol: 100%");
+    this.time = new Label("TI:ME");
+
+    // TODO CLEANUP: Condense these lines?
+    // TO WHOEVER READS THIS MESS:
+    // It's just establishing handlers. Carry On.
+    this.play.setOnAction(e -> handle(new PlayEvent()));
+    this.pause.setOnAction(e -> handle(new PauseEvent()));
+    this.stop.setOnAction(e -> handle(new StopEvent()));
+    this.forward.setOnAction(e -> handle(new ForwardEvent()));
+    this.rewind.setOnAction(e -> handle(new RewindEvent()));
+    this.volumeUp.setOnAction(e -> handle(new VolumeUpEvent()));
+    this.volumeDown.setOnAction(e -> handle(new VolumeDownEvent()));
+
+    // Hopefully this doesn't grow to the nightmare in MediaHandler
+    // NotLikeAji
+
+    eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
 
     this.bottomButtons.getChildren().addAll(this.play, this.pause, this.stop, this.forward, this.rewind, this.volumeUp, this.volumeDown);
-    this.getChildren().addAll(this.bottomButtons, this.seekBar);
+    this.getChildren().addAll(this.bottomButtons, this.seekBar, this.volume, this.time);
 
   }
 
-  private void handleForward (ActionEvent aEvent) {
-    this.eventBus.emit(new ForwardEvent());
+  private class VolumeChangedEventListener implements EventListener<VolumeChangedEvent> {
+    @Override
+    public void handle(VolumeChangedEvent event) {
+      String volumeFormat = "Vol: %.0f%%";
+      // I thought you were smart Java
+      volume.setText(String.format(volumeFormat, event.getVol() * 100));
+      System.out.println(event.getVol() * 100);
+    }
   }
 
-  private void handlePlay (ActionEvent aEvent) {
-    this.eventBus.emit(new PlayEvent());
-  }
-
-  private void handlePause (ActionEvent aEvent) {
-    this.eventBus.emit(new PauseEvent());
-  }
-
-  private void handleRewind (ActionEvent aEvent) {
-    this.eventBus.emit(new RewindEvent());
-  }
-
-  private void handleStop (ActionEvent aEvent) {
-    this.eventBus.emit(new StopEvent());
-  }
-
-  private void handleVolumeDown (ActionEvent aEvent) {
-    this.eventBus.emit(new VolumeDownEvent());
-  }
-
-  private void handleVolumeUp (ActionEvent aEvent) {
-    this.eventBus.emit(new VolumeUpEvent());
+  private void handle (Event event) {
+    this.eventBus.emit(event);
   }
 }

@@ -4,7 +4,7 @@ import com.ajibuster.app.eventbus.Event;
 
 public class VolumeUpEvent implements Event {
 
-  private String value = "Volume Up";
+  private String value = "VolumeUp";
 
   public String getValue () {
     return this.value;
