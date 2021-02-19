@@ -23,7 +23,6 @@ public class MediaHandler {
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
 
-    // TODO CLEANUP: simplify this.
     // TO WHOEVER READS THIS MESS:
     // It's just establishing listeners. Carry On.
     eventBus.listen(PlayEvent.class, new PlayEventListener());
