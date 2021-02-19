@@ -32,8 +32,7 @@ public class MediaHandler {
     eventBus.listen(SeekTimeEvent.class, new SeekTimeEventListener());
     eventBus.listen(ForwardEvent.class, new ForwardEventListener());
     eventBus.listen(RewindEvent.class, new RewindEventListener());
-    eventBus.listen(VolumeUpEvent.class, new VolumeUpEventListener());
-    eventBus.listen(VolumeDownEvent.class, new VolumeDownEventListener());
+    eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
   }
 
   // The World's Supply of Event Listeners
@@ -90,30 +89,11 @@ public class MediaHandler {
     }
 
   }
-  private class VolumeUpEventListener implements EventListener<VolumeUpEvent> {
+  private class VolumeChangedEventListener implements EventListener<VolumeChangedEvent> {
 
     @Override
-    public void handle(VolumeUpEvent event) {
-      player.setVolume(player.getVolume() + 0.05);
-      // TODO CLEANUP: Fix this crap
-      // Then Do the Same Below
-      if (player.getVolume() <= 1) {
-        eventBus.emit(new VolumeChangedEvent(player.getVolume()));
-      }
-      if (player.getVolume() > 1) {
-        return;
-      }
-      
-
-    }
-
-  }
-  private class VolumeDownEventListener implements EventListener<VolumeDownEvent> {
-
-    @Override
-    public void handle(VolumeDownEvent event) {
-      player.setVolume(player.getVolume() - 0.05);
-      eventBus.emit(new VolumeChangedEvent(player.getVolume()));
+    public void handle(VolumeChangedEvent event) {
+      player.setVolume(event.getVol());
 
     }
 

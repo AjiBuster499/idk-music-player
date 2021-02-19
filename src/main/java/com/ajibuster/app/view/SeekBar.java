@@ -13,13 +13,12 @@ public class SeekBar extends Slider {
 
   public SeekBar (EventBus eventBus) {
     this.eventBus = eventBus;
+    setMinWidth(500);
 
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
 
     this.setOnMouseClicked(this::seekTime);
     this.setOnMouseDragReleased(this::seekTime);
-
-    this.setMax(1);
   }
 
   private class CurrentTimeEventListener implements EventListener<CurrentTimeEvent> {
