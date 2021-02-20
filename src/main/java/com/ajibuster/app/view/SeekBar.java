@@ -29,7 +29,7 @@ public class SeekBar extends Slider {
 
     @Override
     public void handle(CurrentTimeEvent event) {
-      setValue(event.getTime());
+      setValue(event.getTimePercentage());
     }
     
   }

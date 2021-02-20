@@ -114,8 +114,6 @@ public class MediaHandler {
       startTime();
     });
     this.player.setOnEndOfMedia(() -> {
-      // Reset Time. Stop Media.
-      player.seek(Duration.valueOf("0.0ms"));
       player.stop();
     });
   }
@@ -131,7 +129,6 @@ public class MediaHandler {
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
-            System.out.println("Thread " + Thread.currentThread().getName() + " interrupted.");
             cancel();
           }
         }

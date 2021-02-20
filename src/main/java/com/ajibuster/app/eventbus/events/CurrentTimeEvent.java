@@ -5,17 +5,17 @@ import com.ajibuster.app.eventbus.Event;
 public class CurrentTimeEvent implements Event {
   private String value = "CurrentTime";
 
-  private double time;
+  private double timePercentage;
 
-  public CurrentTimeEvent (double time) {
-    this.time = time;
+  public CurrentTimeEvent (double timePercentage) {
+    this.timePercentage = timePercentage;
   }
 
   public String getValue () {
     return this.value;
   }
 
-  public double getTime () {
-    return this.time;
+  public double getTimePercentage () {
+    return this.timePercentage;
   }
 }
