@@ -30,7 +30,7 @@ public class BottomPane extends VBox {
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
 
-    this.volume = new Label("Vol: 0%");
+    this.volume = new Label("Vol: 0%  ");
     Label time = new Label("TI:ME");
 
     play.setOnAction(e -> handle(new PlayEvent()));
@@ -44,8 +44,8 @@ public class BottomPane extends VBox {
 
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
 
-    timeControls.getChildren().addAll(time, seekBar);
-    volumeControls.getChildren().addAll(volume, volSlider);
+    timeControls.getChildren().addAll(seekBar, time);
+    volumeControls.getChildren().addAll(volSlider, volume);
     bottomButtons.getChildren().addAll(play, pause, stop, forward, rewind);
     this.getChildren().addAll(bottomButtons, timeControls, volumeControls);
 
