@@ -2,7 +2,7 @@
 * Creator : Samuel Mikell (AjiBuster499)     *
 * Application : Music Player I guess?        *
 * Bug Reports go on GitHub, other questions  *
-* and inquiries can be sent to me vial email.*
+* and inquiries can be sent to me via email.*
 * Probably.                                  *
 **********************************************
 

@@ -2,7 +2,7 @@ GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Pl
 
 
 3. Add to the GUI:
-3b. Display Time
+3b. Display Time <--- Come Back Later
 3c. Repeat Button
 
 4. Playlist Implementation.

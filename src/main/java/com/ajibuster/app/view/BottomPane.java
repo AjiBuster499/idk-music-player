@@ -5,6 +5,7 @@ import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -44,6 +45,7 @@ public class BottomPane extends VBox {
     // NotLikeAji
 
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
+    eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
     // TODO: Implement Time Tracking.
     // Due to the use of threads, it is difficult to transfer data across threads.
     // tl;dr Apparently the handler is on another thread and can't interact with the label?
@@ -60,6 +62,23 @@ public class BottomPane extends VBox {
     public void handle(VolumeChangedEvent event) {
       String volumeFormat = "Vol: %.0f%%";
       volume.setText(String.format(volumeFormat, event.getVol() * 100));
+    }
+  }
+
+  private class CurrentTimeEventListener implements EventListener<CurrentTimeEvent> {
+    @Override
+    public void handle(CurrentTimeEvent event) {
+      // This is on the timeThread from MediaHandler
+      // The Label is on the FX Application Thread.
+      // Therefore until I can get to the FX Thread,
+      // I can't do this.
+      String timeFormat = "%02d:%02d";
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          time.setText(String.format(timeFormat, (int) event.getTimeDuration().toMinutes(), (int) event.getTimeDuration().toSeconds() % 60));
+        }
+      });
     }
   }
 

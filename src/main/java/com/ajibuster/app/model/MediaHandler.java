@@ -125,7 +125,8 @@ public class MediaHandler {
       protected Void call() throws Exception {
         while (player.getCurrentTime().lessThanOrEqualTo(player.getStopTime()) && player.getStatus() == Status.PLAYING) {
           double timePercentage = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
-          eventBus.emit(new CurrentTimeEvent(timePercentage));
+          Duration timeDuration = player.getCurrentTime();
+          eventBus.emit(new CurrentTimeEvent(timePercentage, timeDuration));
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
