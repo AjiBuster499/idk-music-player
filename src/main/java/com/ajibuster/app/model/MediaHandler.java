@@ -63,9 +63,14 @@ public class MediaHandler {
 
     @Override
     public void handle(SeekTimeEvent event) {
+      player.pause();
       double rawTime = (event.getTimePercentage() * player.getStopTime().toSeconds()); // In Seconds
       Duration seekTime = new Duration(rawTime * 1000); // Convert rawTime to Millis
+      if (rawTime == 0) {
+        return;
+      }
       player.seek(seekTime);
+      player.play();
     }
 
   }

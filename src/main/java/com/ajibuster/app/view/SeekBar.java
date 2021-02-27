@@ -4,6 +4,7 @@ import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
 
+import javafx.application.Platform;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 
@@ -17,8 +18,8 @@ public class SeekBar extends Slider {
 
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
 
-    setOnMouseClicked(this::seekTime);
-    setOnMouseDragReleased(this::seekTime);
+    setOnMousePressed(this::seekTime);
+    setOnMouseDragged(this::seekTime);
 
     // Note to Self: Default Max is 100
     // This is Necessary LOL
@@ -29,7 +30,14 @@ public class SeekBar extends Slider {
 
     @Override
     public void handle(CurrentTimeEvent event) {
-      setValue(event.getTimePercentage());
+      // This is on the timeThread from MediaHandler
+      Platform.runLater(new Runnable () {
+        // On FX Application Thread
+        @Override
+        public void run() {
+          setValue(event.getTimePercentage());
+        }
+      });
     }
     
   }

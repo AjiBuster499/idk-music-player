@@ -68,12 +68,10 @@ public class BottomPane extends VBox {
   private class CurrentTimeEventListener implements EventListener<CurrentTimeEvent> {
     @Override
     public void handle(CurrentTimeEvent event) {
-      // This is on the timeThread from MediaHandler
-      // The Label is on the FX Application Thread.
-      // Therefore until I can get to the FX Thread,
-      // I can't do this.
+      // This is on timeThread from MediaHandler
       String timeFormat = "%02d:%02d";
       Platform.runLater(new Runnable() {
+        // This is on the FX Application Thread
         @Override
         public void run() {
           time.setText(String.format(timeFormat, (int) event.getTimeDuration().toMinutes(), (int) event.getTimeDuration().toSeconds() % 60));
