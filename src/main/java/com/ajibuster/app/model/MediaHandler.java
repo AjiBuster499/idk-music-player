@@ -19,6 +19,8 @@ public class MediaHandler {
   private Thread timeThread;
 
   private EventBus eventBus;
+  
+  private boolean isRepeating = false;
 
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
@@ -32,6 +34,7 @@ public class MediaHandler {
     eventBus.listen(ForwardEvent.class, new ForwardEventListener());
     eventBus.listen(RewindEvent.class, new RewindEventListener());
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
+    eventBus.listen(RepeatStatusChangeEvent.class, new RepeatStatusChangeEventListener());
   }
 
   // The World's Supply of Event Listeners
@@ -40,6 +43,7 @@ public class MediaHandler {
     public void handle(PlayEvent event) {
       if (player.getStatus() == Status.STOPPED) {
         player.setOnPlaying(() -> {
+          System.out.println("From PlayEventListener#handle()#if#setOnPlaying() " + player.getCurrentTime());
           startTime();
         });
       }
@@ -103,6 +107,31 @@ public class MediaHandler {
 
   }
 
+  private class RepeatStatusChangeEventListener implements EventListener<RepeatStatusChangeEvent> {
+
+    @Override
+    public void handle(RepeatStatusChangeEvent event) {
+      // Need to define cases for each status
+      // Possible cleanup: Create a pattern of sorts for these switches
+      switch (event.getStatus()) {
+        case REPEAT_OFF:
+          isRepeating = false;
+          player.setCycleCount(1);
+          break;
+        case REPEAT_ON:
+          isRepeating = true;
+          player.setCycleCount(MediaPlayer.INDEFINITE);
+          break;
+        case REPEAT_ONE:
+          // Return when playlists are implemented
+          player.setCycleCount(MediaPlayer.INDEFINITE);
+          break;
+      }
+      
+    }
+
+  }
+
   // Generates a new Media Player
   public void createNewPlayer(String filePath) {
     // If there's a player, dispose of it.
@@ -119,7 +148,10 @@ public class MediaHandler {
       startTime();
     });
     this.player.setOnEndOfMedia(() -> {
-      player.stop();
+      if (!isRepeating) {
+        player.seek(Duration.ZERO);
+        player.stop();
+      }
     });
   }
 
@@ -128,8 +160,15 @@ public class MediaHandler {
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
-        while (player.getCurrentTime().lessThanOrEqualTo(player.getStopTime()) && player.getStatus() == Status.PLAYING) {
+        while (player.getCurrentTime().lessThanOrEqualTo(player.getStopTime()) && player.getStatus() != Status.PAUSED) {
+          if (player.getStatus() == Status.STOPPED) {
+            // TODO: Figure out if this is extraneous
+            eventBus.emit(new CurrentTimeEvent(0, Duration.ZERO));
+            cancel();
+          }
+          // Convert the current time to a percentage
           double timePercentage = player.getCurrentTime().toSeconds() / player.getStopTime().toSeconds();
+          // Get the current time as a Duration
           Duration timeDuration = player.getCurrentTime();
           eventBus.emit(new CurrentTimeEvent(timePercentage, timeDuration));
           try {

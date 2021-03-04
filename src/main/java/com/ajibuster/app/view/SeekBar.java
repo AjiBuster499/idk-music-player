@@ -21,8 +21,7 @@ public class SeekBar extends Slider {
     setOnMousePressed(this::seekTime);
     setOnMouseDragged(this::seekTime);
 
-    // Note to Self: Default Max is 100
-    // This is Necessary LOL
+    // When dealing in percentages, a 0-1 scale is easier
     setMax(1);
   }
   
@@ -35,7 +34,7 @@ public class SeekBar extends Slider {
         // On FX Application Thread
         @Override
         public void run() {
-          setValue(event.getTimePercentage());
+          valueProperty().set(event.getTimePercentage());
         }
       });
     }

@@ -4,6 +4,7 @@ import com.ajibuster.app.eventbus.Event;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
+import com.ajibuster.app.model.Repeat;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -14,7 +15,9 @@ import javafx.scene.layout.VBox;
 public class BottomPane extends VBox {
   
   private Label volume, time;
+  private Button repeat;
   private EventBus eventBus;
+  private Repeat repeatState = Repeat.REPEAT_OFF;
 
   public BottomPane (EventBus eventBus) {
     HBox bottomButtons = new HBox();
@@ -28,6 +31,7 @@ public class BottomPane extends VBox {
     Button stop = new Button("Stop");
     Button forward = new Button("Forward");
     Button rewind = new Button("Rewind");
+    this.repeat = new Button("Repeat");
 
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
@@ -40,19 +44,16 @@ public class BottomPane extends VBox {
     stop.setOnAction(e -> handle(new StopEvent()));
     forward.setOnAction(e -> handle(new ForwardEvent()));
     rewind.setOnAction(e -> handle(new RewindEvent()));
+    this.repeat.setOnAction(e -> handleRepeat());
 
     // Hopefully this doesn't grow to the nightmare in MediaHandler
     // NotLikeAji
 
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
-    // TODO: Implement Time Tracking.
-    // Due to the use of threads, it is difficult to transfer data across threads.
-    // tl;dr Apparently the handler is on another thread and can't interact with the label?
-
     timeControls.getChildren().addAll(seekBar, time);
     volumeControls.getChildren().addAll(volSlider, volume);
-    bottomButtons.getChildren().addAll(play, pause, stop, forward, rewind);
+    bottomButtons.getChildren().addAll(play, pause, stop, forward, rewind, repeat);
     this.getChildren().addAll(bottomButtons, timeControls, volumeControls);
 
   }
@@ -82,5 +83,28 @@ public class BottomPane extends VBox {
 
   private void handle (Event event) {
     this.eventBus.emit(event);
+  }
+
+  private void handleRepeat () {
+    switch (repeatState) {
+      case REPEAT_OFF: {
+        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_OFF));
+        this.repeat.setText("Repeat: Off");
+        repeatState = Repeat.REPEAT_ON;
+        break;
+      }
+      case REPEAT_ON: {
+        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_ON));
+        this.repeat.setText("Repeat: On");
+        repeatState = Repeat.REPEAT_ONE;
+        break;
+      }
+      case REPEAT_ONE: {
+        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_ONE));
+        this.repeat.setText("Repeat: One");
+        repeatState = Repeat.REPEAT_OFF;
+        break;
+      }
+    }
   }
 }
