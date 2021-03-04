@@ -1,12 +1,15 @@
 GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Player. Develop a strong understanding of JavaFX and it's tools.
 
+1. Playlist Implementation.
 
-3. Add to the GUI:
-3c. Repeat Button
+2. Display Playlist in GUI.
 
-4. Playlist Implementation.
+3. Enhance UI more:
+3a. Make SeekBar transitions smooth
+3b. SeekBar is colored to the left of the slider.
+3c. Use Images for Labels instead of text.
+3d. UI Components only work when music is selected.
+3e. Add Label to show stop time. (Basic Look: CURRENT ----SEEKBAR---- STOP)
 
-5. Display Playlist in GUI.
-
-6. Prepare for first release?
-6a. research how to package code and deploy
+?. Prepare for first release?
+?a. research how to package code and deploy
