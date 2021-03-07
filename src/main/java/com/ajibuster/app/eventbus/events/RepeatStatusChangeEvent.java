@@ -1,18 +1,18 @@
 package com.ajibuster.app.eventbus.events;
 
 import com.ajibuster.app.eventbus.Event;
-import com.ajibuster.app.model.Repeat;
+import com.ajibuster.app.model.RepeatStatus;
 
 public class RepeatStatusChangeEvent implements Event {
   private String value = "RepeatStatusChanged";
   
-  private Repeat status;
+  private RepeatStatus status;
 
-  public RepeatStatusChangeEvent (Repeat s) {
+  public RepeatStatusChangeEvent (RepeatStatus s) {
     this.status = s;
   }
 
-  public Repeat getStatus () {
+  public RepeatStatus getStatus () {
     return this.status;
   }
 

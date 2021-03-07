@@ -1,7 +1,13 @@
 package com.ajibuster.app;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import com.ajibuster.app.model.MediaItem;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -14,17 +20,49 @@ public class FileWindow {
   public FileWindow() {
     fc.getExtensionFilters().addAll(
       new FileChooser.ExtensionFilter("mp3 Files", "*.mp3"),
+      new FileChooser.ExtensionFilter("m3u Files", "*.m3u"),
       new FileChooser.ExtensionFilter("All Files", "*.*")
     );
   }
 
-  private void display (String title) {
+  private void display(String title) {
     this.file = fc.showOpenDialog(window);
   }
 
-  public String openMusic () {
+  public ArrayList<MediaItem> openMedia() {
+    ArrayList<MediaItem> singleList = new ArrayList<MediaItem>();
     display("Open a music file...");
     String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
-    return "file://" + filePath;
+    // Need to parse .m3u in here
+    if (filePath.endsWith(".m3u")) {
+      return parseM3U(this.file);
+      // Send this to the MediaHandler
+    }
+    singleList.add(new MediaItem(filePath));
+    return singleList;
+  }
+
+  private ArrayList<MediaItem> parseM3U(File m3u) {
+    ArrayList<MediaItem> filePaths = new ArrayList<MediaItem>();
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(m3u));
+
+      // Start reading the file
+      String line;
+      while ((line = reader.readLine()) != null) {
+        // line starts with #?
+        if (line.startsWith("#") || line.isBlank()) {
+          continue;
+        }
+        String path = "file://" + line.replaceAll(Pattern.quote("\s"), "%20");
+        filePaths.add(new MediaItem(path));
+      }
+
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return filePaths;
   }
 }

@@ -2,9 +2,9 @@ package com.ajibuster.app.eventbus.events;
 
 import com.ajibuster.app.eventbus.Event;
 
-public class OpenEvent implements Event {
+public class OpenPlaylistEvent implements Event {
 
-  private String value = "Open";
+  private String value = "OpenPlaylist";
 
   public String getValue () {
     return this.value;

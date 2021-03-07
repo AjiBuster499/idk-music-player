@@ -4,7 +4,7 @@ import com.ajibuster.app.eventbus.Event;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
-import com.ajibuster.app.model.Repeat;
+import com.ajibuster.app.model.RepeatStatus;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -17,7 +17,7 @@ public class BottomPane extends VBox {
   private Label volume, time;
   private Button repeat;
   private EventBus eventBus;
-  private Repeat repeatState = Repeat.REPEAT_OFF;
+  private RepeatStatus repeatState = RepeatStatus.REPEAT_OFF;
 
   public BottomPane (EventBus eventBus) {
     HBox bottomButtons = new HBox();
@@ -88,21 +88,21 @@ public class BottomPane extends VBox {
   private void handleRepeat () {
     switch (repeatState) {
       case REPEAT_OFF: {
-        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_OFF));
+        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_OFF));
         this.repeat.setText("Repeat: Off");
-        repeatState = Repeat.REPEAT_ON;
+        repeatState = RepeatStatus.REPEAT_ON;
         break;
       }
       case REPEAT_ON: {
-        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_ON));
+        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_ON));
         this.repeat.setText("Repeat: On");
-        repeatState = Repeat.REPEAT_ONE;
+        repeatState = RepeatStatus.REPEAT_ONE;
         break;
       }
       case REPEAT_ONE: {
-        handle(new RepeatStatusChangeEvent(Repeat.REPEAT_ONE));
+        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_ONE));
         this.repeat.setText("Repeat: One");
-        repeatState = Repeat.REPEAT_OFF;
+        repeatState = RepeatStatus.REPEAT_OFF;
         break;
       }
     }

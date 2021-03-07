@@ -1,6 +1,10 @@
 GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Player. Develop a strong understanding of JavaFX and it's tools.
 
+META: Practice Unit Testing. A good time for this is while implementing (1a).
+
 1. Playlist Implementation.
+1a. Expand MediaHandler to hold music in a queue/buffer.
+  * ArrayList<Media>
 
 2. Display Playlist in GUI.
 
