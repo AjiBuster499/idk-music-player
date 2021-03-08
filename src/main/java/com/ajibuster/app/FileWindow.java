@@ -30,16 +30,16 @@ public class FileWindow {
   }
 
   public ArrayList<MediaItem> openMedia() {
-    ArrayList<MediaItem> singleList = new ArrayList<MediaItem>();
+    ArrayList<MediaItem> itemList = new ArrayList<MediaItem>();
     display("Open a music file...");
     String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
     // Need to parse .m3u in here
     if (filePath.endsWith(".m3u")) {
-      return parseM3U(this.file);
-      // Send this to the MediaHandler
+      itemList = parseM3U(this.file);
+    } else {
+      itemList.add(new MediaItem("file://" + filePath));
     }
-    singleList.add(new MediaItem(filePath));
-    return singleList;
+    return itemList;
   }
 
   private ArrayList<MediaItem> parseM3U(File m3u) {

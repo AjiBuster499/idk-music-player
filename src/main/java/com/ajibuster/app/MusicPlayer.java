@@ -4,7 +4,6 @@ import com.ajibuster.app.view.*;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
-import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;
@@ -34,7 +33,6 @@ public class MusicPlayer extends BorderPane {
     this.setBottom(this.bottomPane);
 
     eventBus.listen(OpenMediaEvent.class, new OpenMediaEventListener());
-    eventBus.listen(OpenPlaylistEvent.class, new OpenPlaylistEventListener());
   }
 
   private class OpenMediaEventListener implements EventListener<OpenMediaEvent> {
@@ -42,21 +40,11 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenMediaEvent event) {
       // Generate new Media
-      mediaHandler.createNewPlayer(topMenu.getSingleMediaPath());
-      mediaHandler.getPlayer().setOnReady(() -> {
-        centerPane.addImageView(mediaHandler.getAlbumArt());
-      });
+      mediaHandler.createNewPlayer(topMenu.getItemList());
+      // mediaHandler.getPlayer().setOnReady(() -> {
+      //   centerPane.addImageView(mediaHandler.getAlbumArt());
+      // });
     }
     
   }
-
-  private class OpenPlaylistEventListener implements EventListener<OpenPlaylistEvent> {
-
-    @Override
-    public void handle(OpenPlaylistEvent event) {
-      mediaHandler.createNewPlayer(topMenu.getMediaItems());
-    }
-    
-  }
-  
 }

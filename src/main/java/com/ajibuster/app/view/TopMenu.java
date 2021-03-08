@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.ajibuster.app.FileWindow;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
-import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
 import com.ajibuster.app.model.MediaItem;
 
 import javafx.event.ActionEvent;
@@ -18,7 +17,7 @@ public class TopMenu extends MenuBar {
   private Menu menuFile;
   private MenuItem openMedia, openPlaylist;
   private EventBus eventBus;
-  private ArrayList<MediaItem> mediaItems;
+  private ArrayList<MediaItem> itemList;
 
   public TopMenu (EventBus eventBus) {
     this.menuFile = new Menu("File");
@@ -29,7 +28,7 @@ public class TopMenu extends MenuBar {
     this.openPlaylist = new MenuItem("Open Playlist...");
 
     this.openMedia.setOnAction(this::handleOpenMedia);
-    this.openPlaylist.setOnAction(this::handleOpenPlaylist);
+    this.openPlaylist.setOnAction(this::handleOpenMedia);
 
     this.menuFile.getItems().addAll(this.openMedia, this.openPlaylist);
 
@@ -39,22 +38,12 @@ public class TopMenu extends MenuBar {
 
   private void handleOpenMedia (ActionEvent aEvent) {
     FileWindow fw = new FileWindow();
-    this.mediaItems = fw.openMedia();
+    this.itemList = fw.openMedia();
     this.eventBus.emit(new OpenMediaEvent());
   }
 
-  private void handleOpenPlaylist (ActionEvent aEvent) {
-    FileWindow fw = new FileWindow();
-    this.mediaItems = fw.openMedia();
-    this.eventBus.emit(new OpenPlaylistEvent());
-  }
-
-  public String getSingleMediaPath () {
-    return this.mediaItems.get(0).getPath();
-  }
-
-  public ArrayList<MediaItem> getMediaItems () {
-    return this.mediaItems;
+  public ArrayList<MediaItem> getItemList () {
+    return this.itemList;
   }
   
 }

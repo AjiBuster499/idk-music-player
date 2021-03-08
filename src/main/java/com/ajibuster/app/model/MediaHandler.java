@@ -17,7 +17,8 @@ import javafx.util.Duration;
 public class MediaHandler {
   private MediaPlayer player;
   private Media media; // LOOKING TO REMOVE
-  private ArrayList<Media> medias;
+  private ArrayList<Media> mediaList;
+  private Playlist playlist;
 
   private Thread timeThread;
 
@@ -28,10 +29,11 @@ public class MediaHandler {
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
 
-    this.medias = new ArrayList<Media>();
+    this.mediaList = new ArrayList<Media>();
 
     // TO WHOEVER READS THIS MESS:
     // It's just establishing listeners. Carry On.
+    //#region
     eventBus.listen(PlayEvent.class, new PlayEventListener());
     eventBus.listen(PauseEvent.class, new PauseEventListener());
     eventBus.listen(StopEvent.class, new StopEventListener());
@@ -40,49 +42,34 @@ public class MediaHandler {
     eventBus.listen(RewindEvent.class, new RewindEventListener());
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
     eventBus.listen(RepeatStatusChangeEvent.class, new RepeatStatusChangeEventListener());
-  }
-
-  // Generates a new Media Player off a single song
-  public void createNewPlayer(String filePath) {
-    // If there's a player, dispose of it.
-    if (this.player != null) {
-      this.player.dispose();
-    }
-    // Generation
-    this.media = new Media(filePath);
-    this.player = new MediaPlayer(this.media);
-    initPlay();
-    this.player.setOnEndOfMedia(() -> {
-      if (repeatStatus == RepeatStatus.REPEAT_OFF) {
-        player.seek(Duration.ZERO);
-        player.stop();
-      }
-    });
+    //#endregion
   }
 
   // Generates new MediaPlayers for a set of songs
-  public void createNewPlayer(ArrayList<MediaItem> mediaList) {
+  public void createNewPlayer(ArrayList<MediaItem> itemList) {
     // If there's a player, dispose of it.
     if (this.player != null) {
       this.player.dispose();
     }
-    // Empty the medias
-    if (!this.medias.isEmpty()) {
-      this.medias.clear();
-    }
-    // Generate new Medias
-    for (int i = 0; i < mediaList.size(); i++) {
-      // Creates a new Media for each path
-      this.medias.add(new Media(mediaList.get(i).getPath()));
+
+    // Empty the mediaList
+    if (!this.mediaList.isEmpty()) {
+      this.mediaList.clear();
     }
 
-    while (repeatStatus != RepeatStatus.REPEAT_OFF) {
-      this.medias.forEach((media) -> {
-        this.player.dispose();
-        this.player = new MediaPlayer(media);
-        initPlay();
-      });
+    // Generate new mediaList
+    for (int i = 0; i < itemList.size(); i++) {
+      // Creates a new Media for each path
+      this.mediaList.add(new Media(itemList.get(i).getPath()));
     }
+    this.playlist = new Playlist(this, itemList);
+    do {
+      // Establish a player for the first song and play it.
+      for (Media mediaItem : mediaList) {
+        this.player = new MediaPlayer(mediaItem);
+        initPlay();
+      }
+    } while (repeatStatus == RepeatStatus.REPEAT_ON);
   }
 
   private void initPlay() {
@@ -96,10 +83,11 @@ public class MediaHandler {
       switch (repeatStatus) {
       case REPEAT_OFF:
         // do not repeat on end
+        player.dispose();
         break;
       case REPEAT_ON:
         // repeat on end
-
+        player.dispose();
         break;
       case REPEAT_ONE:
         // repeat this media
@@ -154,7 +142,12 @@ public class MediaHandler {
     return this.player;
   }
 
+  public ArrayList<Media> getMediaList () {
+    return this.mediaList;
+  }
+
   // The World's Supply of Event Listeners
+  //#region
   private class PlayEventListener implements EventListener<PlayEvent> {
     @Override
     public void handle(PlayEvent event) {
@@ -235,6 +228,7 @@ public class MediaHandler {
       } 
     }
   }
+  //#endregion
   // END LISTENERS
 }
 
