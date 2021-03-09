@@ -6,7 +6,12 @@ import java.util.List;
 import javafx.scene.media.Media;
 
 public class Playlist {
+  // TODO: Brush up on proper nomenclature
+  // What is English.
   private int index = 0;
+
+  private boolean isRepeating = false;
+  private boolean isEnd = false;
 
   private List<MediaItem> itemList;
   private List<Media> mediaList;
@@ -21,8 +26,11 @@ public class Playlist {
 
   public Media next() {
     // skip to next song
-    if (this.index == this.mediaList.size()) {
-      this.index = 0;
+    if (this.index == this.mediaList.size() - 1) {
+      isEnd = true;
+      if (isRepeating) {
+        this.index = 0;
+      }
     } else {
       this.index++;
     }
@@ -46,5 +54,13 @@ public class Playlist {
 
   public Media getCurrentMedia () {
     return this.mediaList.get(index);
+  }
+
+  public void setRepeating (boolean newRepeating) {
+    this.isRepeating = newRepeating;
+  }
+
+  public boolean getIsEnd () {
+    return this.isEnd;
   }
 }

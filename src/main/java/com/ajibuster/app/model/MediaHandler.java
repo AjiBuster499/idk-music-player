@@ -61,7 +61,7 @@ public class MediaHandler {
       // Creates a new Media for each path
       this.mediaList.add(new Media(itemList.get(i).getPath()));
     }
-    // wHaT iS mY pUrPoSe?
+    // wHaT iS mY pUrPoSe? Still applies
     this.playlist = new Playlist(this.mediaList, itemList);
     do {
       // Establish a player for the first song and play it.
@@ -71,10 +71,15 @@ public class MediaHandler {
   }
 
   private void initPlay () {
+    // CLEANUP: Attempt to remove recursive
     this.player.setOnEndOfMedia(() -> {
       switch (repeatStatus) {
       case REPEAT_OFF:
         // do not repeat on end
+        if (playlist.getIsEnd()) {
+          player.stop();
+          break;
+        }
       case REPEAT_ON:
         // repeat on end
         player.dispose();
@@ -86,9 +91,8 @@ public class MediaHandler {
         player.seek(Duration.ZERO);
         break;
       }
-      System.out.println("end of media: " + playlist.getCurrentMedia());
     });
-    // this.player.setAutoPlay(true);
+    this.player.setAutoPlay(true);
     this.player.setOnPlaying(() -> {
       // Start Tracking Time
       startTime();
@@ -102,7 +106,6 @@ public class MediaHandler {
       protected Void call() throws Exception {
         while (player.getCurrentTime().lessThanOrEqualTo(player.getStopTime()) && player.getStatus() != Status.PAUSED) {
           if (player.getStatus() == Status.STOPPED) {
-            // TODO: Figure out if this is extraneous
             eventBus.emit(new CurrentTimeEvent(0, Duration.ZERO));
             cancel();
           }
@@ -207,10 +210,12 @@ public class MediaHandler {
       switch (event.getStatus()) {
         case REPEAT_OFF:
           repeatStatus = RepeatStatus.REPEAT_OFF;
+          playlist.setRepeating(false);
           player.setCycleCount(1);
           break;
         case REPEAT_ON:
           repeatStatus = RepeatStatus.REPEAT_ON;
+          playlist.setRepeating(true);
           player.setCycleCount(1);
           break;
         case REPEAT_ONE:

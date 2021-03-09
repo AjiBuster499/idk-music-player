@@ -3,8 +3,28 @@ GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Pl
 META: Practice Unit Testing. A good time for this is while implementing (1a).
 
 1. Playlist Implementation.
-1a. Expand MediaHandler to hold music in a queue/buffer.
-  * ArrayList<Media>
+1a. Add to the queue:
+  * Don't kill music when opening a media
+    - Add to the queue (playlist.queue()?)
+  * Do kill music when opening a new playlist
+  * Open multiple files option
+    - When opening multiple files, addAll to itemsList
+  * Open Playlist should only have .m3u and All Files options
+  * ISSUE: Closing file selection without selecting a file throws an error
+
+1b. Reimplementation of AlbumArt
+  - Emit new Event after loading a song to tell the window to display new art
+
+1c. Save Playlist to file.
+  * Use FileWriter to write a file in .m3u
+  * Take the current queue, and write it into a .m3u format
+    - #EXTM3U
+    - \n
+    - #EXTINF %d, %s - %s
+    - filePaths
+    - \n for each path
+  * POSSIBLE ISSUE: Spaces
+    - Convert to %20
 
 2. Display Playlist in GUI.
 

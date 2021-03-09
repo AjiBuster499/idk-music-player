@@ -41,6 +41,7 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenMediaEvent event) {
       // Generate new Media
       mediaHandler.createNewPlayer(topMenu.getItemList());
+      // Break below into a new eventHandler
       // mediaHandler.getPlayer().setOnReady(() -> {
       //   centerPane.addImageView(mediaHandler.getAlbumArt());
       // });
