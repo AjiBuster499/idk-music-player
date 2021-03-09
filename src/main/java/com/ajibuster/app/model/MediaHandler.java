@@ -16,7 +16,6 @@ import javafx.util.Duration;
 
 public class MediaHandler {
   private MediaPlayer player;
-  private Media media; // LOOKING TO REMOVE
   private ArrayList<Media> mediaList;
   private Playlist playlist;
 
@@ -62,42 +61,37 @@ public class MediaHandler {
       // Creates a new Media for each path
       this.mediaList.add(new Media(itemList.get(i).getPath()));
     }
-    this.playlist = new Playlist(this, itemList);
+    // wHaT iS mY pUrPoSe?
+    this.playlist = new Playlist(this.mediaList, itemList);
     do {
       // Establish a player for the first song and play it.
-      for (Media mediaItem : mediaList) {
-        this.player = new MediaPlayer(mediaItem);
-        initPlay();
-      }
+      this.player = new MediaPlayer(this.playlist.getCurrentMedia());
+      initPlay();
     } while (repeatStatus == RepeatStatus.REPEAT_ON);
   }
 
-  private void initPlay() {
-    this.player.setAutoPlay(true);
-    this.player.setOnPlaying(() -> {
-      // Start Tracking Time
-      startTime();
-    });
-
+  private void initPlay () {
     this.player.setOnEndOfMedia(() -> {
       switch (repeatStatus) {
       case REPEAT_OFF:
         // do not repeat on end
-        player.dispose();
-        break;
       case REPEAT_ON:
         // repeat on end
         player.dispose();
+        player = new MediaPlayer(playlist.next());
+        initPlay();
         break;
       case REPEAT_ONE:
         // repeat this media
         player.seek(Duration.ZERO);
         break;
-      default:
-        System.out.println("You made it to default!");
-        break;
-
       }
+      System.out.println("end of media: " + playlist.getCurrentMedia());
+    });
+    // this.player.setAutoPlay(true);
+    this.player.setOnPlaying(() -> {
+      // Start Tracking Time
+      startTime();
     });
   }
 
@@ -134,7 +128,7 @@ public class MediaHandler {
 
   public ImageView getAlbumArt () {
     // Fetches Album Cover from metadata.
-    ImageView iv = new ImageView((Image) this.media.getMetadata().get("image"));
+    ImageView iv = new ImageView((Image) this.playlist.getCurrentMedia().getMetadata().get("image"));
     return iv;
   }
 
@@ -153,7 +147,6 @@ public class MediaHandler {
     public void handle(PlayEvent event) {
       if (player.getStatus() == Status.STOPPED) {
         player.setOnPlaying(() -> {
-          System.out.println("From PlayEventListener#handle()#if#setOnPlaying() " + player.getCurrentTime());
           startTime();
         });
       }
