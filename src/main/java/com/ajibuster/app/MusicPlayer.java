@@ -58,7 +58,6 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenPlaylistEvent event) {
       // Create a new player, regardless of whether one exists.
-      // TODO: Check logic in below method for existence of players
       mediaHandler.createNewPlayer(topMenu.getItemList());
     }
   }

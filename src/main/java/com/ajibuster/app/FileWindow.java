@@ -13,6 +13,7 @@ import com.ajibuster.app.model.media.MediaItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+// TODO: Probably rename to OpenFileWindow
 public class FileWindow {
   private Stage window = new Stage();
   private FileChooser fc = new FileChooser();
@@ -20,6 +21,7 @@ public class FileWindow {
   private ArrayList<MediaItem> itemList;
 
   public FileWindow(String title) {
+    // TODO: Make different ExtensionFilters for each type of window
     this.fileList = new ArrayList<File>();
     window.setTitle(title);
     fc.getExtensionFilters().addAll(
@@ -31,16 +33,18 @@ public class FileWindow {
 
   private void display() {
     this.fileList.clear();
-    this.fileList.addAll(fc.showOpenMultipleDialog(window));
+    List<File> list = fc.showOpenMultipleDialog(window);
+    if (list == null) {
+      // do literally nothing
+      return;
+    } else {
+      this.fileList.addAll(list);
+    }
   }
 
   public ArrayList<MediaItem> openMedia() {
     this.itemList = new ArrayList<MediaItem>();
     display();
-    if (this.fileList.isEmpty()) {
-      // do absolutely nothing.
-      // like just close the window and be peaceful
-    }
     if (this.fileList.get(0).getAbsolutePath().endsWith(".m3u")) {
       // Parse .m3u
       itemList = parseM3U(this.fileList.get(0));
@@ -49,7 +53,6 @@ public class FileWindow {
         itemList.add(new MediaItem("file://" + file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20")));
       }
     }
-
     return itemList;
   }
 

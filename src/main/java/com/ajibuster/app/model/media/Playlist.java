@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import javafx.scene.media.Media;
 
 public class Playlist {
-  // TODO: properly name booleans
-  // What is English.
   private int index = 0;
 
-  private boolean isRepeating = false;
-  private boolean isEnd = false;
+  private boolean repeating = false;
+  private boolean endOfPlaylist = false;
 
   private ArrayList<Media> mediaList;
   
@@ -32,8 +30,8 @@ public class Playlist {
   public Media next() {
     // skip to next song
     if (this.index == this.mediaList.size() - 1) {
-      isEnd = true;
-      if (isRepeating) {
+      this.endOfPlaylist = true;
+      if (this.repeating) {
         this.index = 0;
       }
     } else {
@@ -71,10 +69,10 @@ public class Playlist {
   }
 
   public void setRepeating (boolean newRepeating) {
-    this.isRepeating = newRepeating;
+    this.repeating = newRepeating;
   }
 
-  public boolean getIsEnd () {
-    return this.isEnd;
+  public boolean isEndOfPlaylist () {
+    return this.endOfPlaylist;
   }
 }

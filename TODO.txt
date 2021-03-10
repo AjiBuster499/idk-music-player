@@ -5,9 +5,14 @@ META: Poke around in Docker and make the player alone run in a docker.
 
 1. Playlist Implementation.
 1a. Add to the queue:
-  * Do kill music when opening a new playlist (Implementation TBD)
   * Open Playlist should only have .m3u and All Files options
   * ISSUE: Closing file selection without selecting a file throws an error
+    - Potential Solutions:
+      a. Emit an Event on the EventBus
+        * Requires FileWindow to know about EventBus
+        * Listener is in TopMenu to simply do nothing
+      b. just deal with IndexOutOfBounds
+        * FeelsBadMan, but it's not hindering the application.
 
 1b. Reimplementation of AlbumArt
   - Emit new Event after loading a song to tell the window to display new art
@@ -19,7 +24,8 @@ META: Poke around in Docker and make the player alone run in a docker.
     - \n
     - #EXTINF %d, %s - %s
     - filePaths
-    - \n for each path
+    - \n
+    - For each path
   * POSSIBLE ISSUE: Spaces
     - Convert to %20
 

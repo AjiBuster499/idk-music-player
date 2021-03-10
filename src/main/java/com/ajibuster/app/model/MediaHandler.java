@@ -48,6 +48,10 @@ public class MediaHandler {
 
   // Generates new MediaPlayers for a set of songs
   public void createNewPlayer(ArrayList<MediaItem> itemList) {
+    // eliminate the old player
+    if (this.player != null) {
+      this.player.dispose();
+    }
     // Check the Playlist
     if (this.playlist == null) {
       // Generate a new playlist
@@ -65,7 +69,7 @@ public class MediaHandler {
       switch (repeatStatus) {
       case REPEAT_OFF:
         // do not repeat on end
-        if (playlist.getIsEnd()) {
+        if (playlist.isEndOfPlaylist()) {
           player.seek(Duration.ZERO);
           player.stop();
           break;

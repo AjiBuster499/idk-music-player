@@ -7,6 +7,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * @deprecated
+ * I don't know why I still have this in here.
+ * FileWindow handles opening Files.
+ * @author ajibuster499
+ * @see FileWindow.java
+ */
 public class OpenWindow {
   static Stage window;
 
