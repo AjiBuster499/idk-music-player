@@ -30,9 +30,9 @@ public class MediaHandler {
     // TO WHOEVER READS THIS MESS:
     // It's just establishing listeners. Carry On.
     //#region
-    eventBus.listen(PlayEvent.class, new PlayEventListener());
-    eventBus.listen(PauseEvent.class, new PauseEventListener());
-    eventBus.listen(StopEvent.class, new StopEventListener());
+    eventBus.listen(PlayMediaEvent.class, new PlayMediaEventListener());
+    eventBus.listen(PauseMediaEvent.class, new PauseMediaEventListener());
+    eventBus.listen(StopMediaEvent.class, new StopMediaEventListener());
     eventBus.listen(SeekTimeEvent.class, new SeekTimeEventListener());
     eventBus.listen(ForwardEvent.class, new ForwardEventListener());
     eventBus.listen(RewindEvent.class, new RewindEventListener());
@@ -55,7 +55,7 @@ public class MediaHandler {
     // Check the Playlist
     if (this.playlist == null) {
       // Generate a new playlist
-      this.playlist = new Playlist(itemList);
+      this.playlist = new Playlist(itemList, this.eventBus);
     }
 
     // Establish a player for the first song and play it.
@@ -129,15 +129,15 @@ public class MediaHandler {
     return iv;
   }
 
-  public MediaPlayer getPlayer () {
-    return this.player;
+  public boolean isPlayerAlive () {
+    return this.player != null ? true: false;
   }
 
   // The World's Supply of Event Listeners
   //#region
-  private class PlayEventListener implements EventListener<PlayEvent> {
+  private class PlayMediaEventListener implements EventListener<PlayMediaEvent> {
     @Override
-    public void handle(PlayEvent event) {
+    public void handle(PlayMediaEvent event) {
       if (player.getStatus() == Status.STOPPED) {
         player.setOnPlaying(() -> {
           startTime();
@@ -146,15 +146,15 @@ public class MediaHandler {
       player.play();
     }
   }
-  private class PauseEventListener implements EventListener<PauseEvent> {
+  private class PauseMediaEventListener implements EventListener<PauseMediaEvent> {
     @Override
-    public void handle(PauseEvent event) {
+    public void handle(PauseMediaEvent event) {
       player.pause();
     }
   }
-  private class StopEventListener implements EventListener<StopEvent> {
+  private class StopMediaEventListener implements EventListener<StopMediaEvent> {
     @Override
-    public void handle(StopEvent event) {
+    public void handle(StopMediaEvent event) {
       player.stop();
       timeThread.interrupt();
     }

@@ -6,6 +6,7 @@ import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
+import com.ajibuster.app.eventbus.events.SkipMediaEvent;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;
@@ -13,30 +14,29 @@ import javafx.scene.layout.BorderPane;
 public class MusicPlayer extends BorderPane {
 
   private TopMenu topMenu;
-  private BottomPane bottomPane;
-  private LeftPane leftPane;
   private CenterPane centerPane;
 
   private MediaHandler mediaHandler;
 
   public MusicPlayer(MediaHandler mediaHandler, EventBus eventBus) {
     this.topMenu = new TopMenu(eventBus);
-    this.bottomPane = new BottomPane(eventBus);
-    this.leftPane = new LeftPane();
+    BottomPane bottomPane = new BottomPane(eventBus);
+    LeftPane leftPane = new LeftPane();
     this.centerPane = new CenterPane();
     this.mediaHandler = mediaHandler;
 
-    this.leftPane.setStyle("-fx-border-style: hidden solid hidden hidden; -fx-border-color: black");
+    leftPane.setStyle("-fx-border-style: hidden solid hidden hidden; -fx-border-color: black");
     // CLEANUP: Create a .css and put style in there.
 
     this.setCenter(this.centerPane);
-    this.setLeft(this.leftPane);
+    this.setLeft(leftPane);
     this.setTop(this.topMenu);
-    this.setBottom(this.bottomPane);
+    this.setBottom(bottomPane);
 
     eventBus.listen(OpenMediaEvent.class, new OpenMediaEventListener());
     eventBus.listen(OpenPlaylistEvent.class, new OpenPlaylistEventListener());
     eventBus.listen(OpenMultipleMediaEvent.class, new OpenMultipleMediaEventListener());
+    eventBus.listen(SkipMediaEvent.class, new SkipMediaEventListener());
   }
 
   //#region
@@ -44,7 +44,7 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenMediaEvent event) {
       // Check for a player
-      if (mediaHandler.getPlayer() == null) {
+      if (!mediaHandler.isPlayerAlive()) {
         // no player
         mediaHandler.createNewPlayer(topMenu.getItemList());
       } else {
@@ -67,7 +67,7 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenMultipleMediaEvent event) {
       // Same as OpenMediaEventListener for now.
       // Check for a player
-      if (mediaHandler.getPlayer() == null) {
+      if (!mediaHandler.isPlayerAlive()) {
         // no player
         mediaHandler.createNewPlayer(topMenu.getItemList());
       } else {
@@ -75,6 +75,15 @@ public class MusicPlayer extends BorderPane {
         mediaHandler.addMedia(topMenu.getItemList());
       }
     }
+  }
+  private class SkipMediaEventListener implements EventListener<SkipMediaEvent> {
+
+    @Override
+    public void handle(SkipMediaEvent event) {
+      // load new image
+      centerPane.addImageView(mediaHandler.getAlbumArt());
+    }
+
   }
   //#endregion
 }

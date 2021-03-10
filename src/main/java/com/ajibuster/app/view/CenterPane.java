@@ -8,6 +8,7 @@ public class CenterPane extends StackPane {
 
   public CenterPane () {
     // Blank Pane for first opening
+    // Maybe create a default image to display
   }
 
   public void addImageView (ImageView iv) {

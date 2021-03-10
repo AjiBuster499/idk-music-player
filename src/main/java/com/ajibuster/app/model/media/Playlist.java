@@ -2,6 +2,9 @@ package com.ajibuster.app.model.media;
 
 import java.util.ArrayList;
 
+import com.ajibuster.app.eventbus.EventBus;
+import com.ajibuster.app.eventbus.events.SkipMediaEvent;
+
 import javafx.scene.media.Media;
 
 public class Playlist {
@@ -10,10 +13,13 @@ public class Playlist {
   private boolean repeating = false;
   private boolean endOfPlaylist = false;
 
+  private EventBus eventBus;
+
   private ArrayList<Media> mediaList;
   
-  public Playlist (ArrayList<MediaItem> itemList) {
+  public Playlist (ArrayList<MediaItem> itemList, EventBus eventBus) {
     this.mediaList = createMedia(itemList);
+    this.eventBus = eventBus;
     
     // Use itemlist to set every media's title and artist.
   }
@@ -37,6 +43,7 @@ public class Playlist {
     } else {
       this.index++;
     }
+    this.eventBus.emit(new SkipMediaEvent());
     return this.mediaList.get(index);
   }
 
@@ -47,6 +54,7 @@ public class Playlist {
     } else {
       this.index--;
     }
+    this.eventBus.emit(new SkipMediaEvent());
     return this.mediaList.get(index);
   }
 

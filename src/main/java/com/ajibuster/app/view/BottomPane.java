@@ -16,6 +16,7 @@ public class BottomPane extends VBox {
   
   private Label volume, time;
   private Button repeat;
+
   private EventBus eventBus;
   private RepeatStatus repeatState = RepeatStatus.REPEAT_OFF;
 
@@ -31,7 +32,7 @@ public class BottomPane extends VBox {
     Button stop = new Button("Stop");
     Button forward = new Button("Forward");
     Button rewind = new Button("Rewind");
-    this.repeat = new Button("Repeat");
+    this.repeat = new Button("Repeat: OFF");
 
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
@@ -39,18 +40,18 @@ public class BottomPane extends VBox {
     this.volume = new Label("Vol: 100%");
     this.time = new Label("00:00");
 
-    play.setOnAction(e -> handle(new PlayEvent()));
-    pause.setOnAction(e -> handle(new PauseEvent()));
-    stop.setOnAction(e -> handle(new StopEvent()));
+    play.setOnAction(e -> handle(new PlayMediaEvent()));
+    pause.setOnAction(e -> handle(new PauseMediaEvent()));
+    stop.setOnAction(e -> handle(new StopMediaEvent()));
     forward.setOnAction(e -> handle(new ForwardEvent()));
     rewind.setOnAction(e -> handle(new RewindEvent()));
     this.repeat.setOnAction(e -> handleRepeat());
 
     // Hopefully this doesn't grow to the nightmare in MediaHandler
     // NotLikeAji
-
     eventBus.listen(VolumeChangedEvent.class, new VolumeChangedEventListener());
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
+
     timeControls.getChildren().addAll(seekBar, time);
     volumeControls.getChildren().addAll(volSlider, volume);
     bottomButtons.getChildren().addAll(play, pause, stop, forward, rewind, repeat);
