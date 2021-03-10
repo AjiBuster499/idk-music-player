@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
+import com.ajibuster.app.model.media.*;
 
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;

@@ -4,7 +4,7 @@ import com.ajibuster.app.eventbus.Event;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
-import com.ajibuster.app.model.RepeatStatus;
+import com.ajibuster.app.model.media.RepeatStatus;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;

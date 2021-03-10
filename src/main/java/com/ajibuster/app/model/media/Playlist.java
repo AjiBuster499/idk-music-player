@@ -1,4 +1,4 @@
-package com.ajibuster.app.model;
+package com.ajibuster.app.model.media;
 
 import java.util.ArrayList;
 

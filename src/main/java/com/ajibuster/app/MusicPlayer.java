@@ -4,6 +4,8 @@ import com.ajibuster.app.view.*;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
+import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
+import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;
@@ -33,8 +35,11 @@ public class MusicPlayer extends BorderPane {
     this.setBottom(this.bottomPane);
 
     eventBus.listen(OpenMediaEvent.class, new OpenMediaEventListener());
+    eventBus.listen(OpenPlaylistEvent.class, new OpenPlaylistEventListener());
+    eventBus.listen(OpenMultipleMediaEvent.class, new OpenMultipleMediaEventListener());
   }
 
+  //#region
   private class OpenMediaEventListener implements EventListener<OpenMediaEvent> {
     @Override
     public void handle(OpenMediaEvent event) {
@@ -46,12 +51,31 @@ public class MusicPlayer extends BorderPane {
         // just add it to the queue
         mediaHandler.addMedia(topMenu.getItemList());
       }
-      
-      // Break below into a new eventHandler
-      // mediaHandler.getPlayer().setOnReady(() -> {
-      //   centerPane.addImageView(mediaHandler.getAlbumArt());
-      // });
     }
-    
   }
+
+  private class OpenPlaylistEventListener implements EventListener<OpenPlaylistEvent> {
+    @Override
+    public void handle(OpenPlaylistEvent event) {
+      // Create a new player, regardless of whether one exists.
+      // TODO: Check logic in below method for existence of players
+      mediaHandler.createNewPlayer(topMenu.getItemList());
+    }
+  }
+
+  private class OpenMultipleMediaEventListener implements EventListener<OpenMultipleMediaEvent> {
+    @Override
+    public void handle(OpenMultipleMediaEvent event) {
+      // Same as OpenMediaEventListener for now.
+      // Check for a player
+      if (mediaHandler.getPlayer() == null) {
+        // no player
+        mediaHandler.createNewPlayer(topMenu.getItemList());
+      } else {
+        // just add it to the queue
+        mediaHandler.addMedia(topMenu.getItemList());
+      }
+    }
+  }
+  //#endregion
 }

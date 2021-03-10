@@ -5,9 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-import com.ajibuster.app.model.MediaItem;
+import com.ajibuster.app.model.media.MediaItem;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -15,9 +16,12 @@ import javafx.stage.Stage;
 public class FileWindow {
   private Stage window = new Stage();
   private FileChooser fc = new FileChooser();
-  private File file;
+  private List<File> fileList;
+  private ArrayList<MediaItem> itemList;
 
-  public FileWindow() {
+  public FileWindow(String title) {
+    this.fileList = new ArrayList<File>();
+    window.setTitle(title);
     fc.getExtensionFilters().addAll(
       new FileChooser.ExtensionFilter("mp3 Files", "*.mp3"),
       new FileChooser.ExtensionFilter("m3u Files", "*.m3u"),
@@ -25,20 +29,27 @@ public class FileWindow {
     );
   }
 
-  private void display(String title) {
-    this.file = fc.showOpenDialog(window);
+  private void display() {
+    this.fileList.clear();
+    this.fileList.addAll(fc.showOpenMultipleDialog(window));
   }
 
   public ArrayList<MediaItem> openMedia() {
-    ArrayList<MediaItem> itemList = new ArrayList<MediaItem>();
-    display("Open a music file...");
-    String filePath = this.file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20");
-    // Need to parse .m3u in here
-    if (filePath.endsWith(".m3u")) {
-      itemList = parseM3U(this.file);
-    } else {
-      itemList.add(new MediaItem("file://" + filePath));
+    this.itemList = new ArrayList<MediaItem>();
+    display();
+    if (this.fileList.isEmpty()) {
+      // do absolutely nothing.
+      // like just close the window and be peaceful
     }
+    if (this.fileList.get(0).getAbsolutePath().endsWith(".m3u")) {
+      // Parse .m3u
+      itemList = parseM3U(this.fileList.get(0));
+    } else {
+      for (File file : fileList) {
+        itemList.add(new MediaItem("file://" + file.getAbsolutePath().replaceAll(Pattern.quote("\s"), "%20")));
+      }
+    }
+
     return itemList;
   }
 
@@ -50,14 +61,15 @@ public class FileWindow {
       // Start reading the file
       String line;
       while ((line = reader.readLine()) != null) {
-        // line starts with #?
+        // line starts with # or is blank
         if (line.startsWith("#") || line.isBlank()) {
+          // Don't want it
+          // Need to add these lines in and parse them into the right data.
           continue;
         }
         String path = "file://" + line.replaceAll(Pattern.quote("\s"), "%20");
         filePaths.add(new MediaItem(path));
       }
-
       reader.close();
     } catch (IOException e) {
       e.printStackTrace();

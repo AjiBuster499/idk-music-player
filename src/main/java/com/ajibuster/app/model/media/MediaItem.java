@@ -1,4 +1,4 @@
-package com.ajibuster.app.model;
+package com.ajibuster.app.model.media;
 
 public class MediaItem {
   private String mediaPath, albumArtist, title;

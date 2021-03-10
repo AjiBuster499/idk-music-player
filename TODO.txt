@@ -5,11 +5,7 @@ META: Poke around in Docker and make the player alone run in a docker.
 
 1. Playlist Implementation.
 1a. Add to the queue:
-  * Don't kill music when opening a media
-    - Add to the queue (playlist.queue()?)
-  * Do kill music when opening a new playlist
-  * Open multiple files option
-    - When opening multiple files, addAll to itemsList
+  * Do kill music when opening a new playlist (Implementation TBD)
   * Open Playlist should only have .m3u and All Files options
   * ISSUE: Closing file selection without selecting a file throws an error
 
