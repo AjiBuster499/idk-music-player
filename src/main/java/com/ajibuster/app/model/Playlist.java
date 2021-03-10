@@ -1,27 +1,32 @@
 package com.ajibuster.app.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javafx.scene.media.Media;
 
 public class Playlist {
-  // TODO: Brush up on proper nomenclature
+  // TODO: properly name booleans
   // What is English.
   private int index = 0;
 
   private boolean isRepeating = false;
   private boolean isEnd = false;
 
-  private List<MediaItem> itemList;
-  private List<Media> mediaList;
+  private ArrayList<Media> mediaList;
   
-  public Playlist (ArrayList<Media> mediaList, ArrayList<MediaItem> itemList) {
-    this.itemList = itemList;
-    this.mediaList = mediaList;
+  public Playlist (ArrayList<MediaItem> itemList) {
+    this.mediaList = createMedia(itemList);
     
     // Use itemlist to set every media's title and artist.
-    
+  }
+
+  private ArrayList<Media> createMedia (ArrayList<MediaItem> itemList) {
+    this.mediaList = new ArrayList<>();
+    for (MediaItem item : itemList) {
+      this.mediaList.add(new Media(item.getPath()));
+    }
+
+    return this.mediaList;
   }
 
   public Media next() {
@@ -52,8 +57,17 @@ public class Playlist {
     // return value TBD
   }
 
+  public ArrayList<Media> queue (ArrayList<MediaItem> newItems) {
+    this.mediaList.addAll(createMedia(newItems));
+    return this.mediaList;
+  }
+
   public Media getCurrentMedia () {
     return this.mediaList.get(index);
+  }
+
+  public ArrayList<Media> getMediaList () {
+    return this.mediaList;
   }
 
   public void setRepeating (boolean newRepeating) {

@@ -9,14 +9,12 @@ import com.ajibuster.app.eventbus.events.*;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 
 public class MediaHandler {
   private MediaPlayer player;
-  private ArrayList<Media> mediaList;
   private Playlist playlist;
 
   private Thread timeThread;
@@ -27,8 +25,6 @@ public class MediaHandler {
 
   public MediaHandler(EventBus eventBus) {
     this.eventBus = eventBus;
-
-    this.mediaList = new ArrayList<Media>();
 
     // TO WHOEVER READS THIS MESS:
     // It's just establishing listeners. Carry On.
@@ -44,30 +40,22 @@ public class MediaHandler {
     //#endregion
   }
 
+  public void addMedia (ArrayList<MediaItem> items) {
+    // Add media to the playlist
+    this.playlist.queue(items);
+  }
+
   // Generates new MediaPlayers for a set of songs
   public void createNewPlayer(ArrayList<MediaItem> itemList) {
-    // If there's a player, dispose of it.
-    if (this.player != null) {
-      this.player.dispose();
+    // Check the Playlist
+    if (this.playlist == null) {
+      // Generate a new playlist
+      this.playlist = new Playlist(itemList);
     }
 
-    // Empty the mediaList
-    if (!this.mediaList.isEmpty()) {
-      this.mediaList.clear();
-    }
-
-    // Generate new mediaList
-    for (int i = 0; i < itemList.size(); i++) {
-      // Creates a new Media for each path
-      this.mediaList.add(new Media(itemList.get(i).getPath()));
-    }
-    // wHaT iS mY pUrPoSe? Still applies
-    this.playlist = new Playlist(this.mediaList, itemList);
-    do {
-      // Establish a player for the first song and play it.
-      this.player = new MediaPlayer(this.playlist.getCurrentMedia());
-      initPlay();
-    } while (repeatStatus == RepeatStatus.REPEAT_ON);
+    // Establish a player for the first song and play it.
+    this.player = new MediaPlayer(this.playlist.getCurrentMedia());
+    initPlay(); // recursive method
   }
 
   private void initPlay () {
@@ -77,6 +65,7 @@ public class MediaHandler {
       case REPEAT_OFF:
         // do not repeat on end
         if (playlist.getIsEnd()) {
+          player.seek(Duration.ZERO);
           player.stop();
           break;
         }
@@ -137,10 +126,6 @@ public class MediaHandler {
 
   public MediaPlayer getPlayer () {
     return this.player;
-  }
-
-  public ArrayList<Media> getMediaList () {
-    return this.mediaList;
   }
 
   // The World's Supply of Event Listeners

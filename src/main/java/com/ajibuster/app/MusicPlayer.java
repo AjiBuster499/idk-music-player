@@ -36,11 +36,17 @@ public class MusicPlayer extends BorderPane {
   }
 
   private class OpenMediaEventListener implements EventListener<OpenMediaEvent> {
-
     @Override
     public void handle(OpenMediaEvent event) {
-      // Generate new Media
-      mediaHandler.createNewPlayer(topMenu.getItemList());
+      // Check for a player
+      if (mediaHandler.getPlayer() == null) {
+        // no player
+        mediaHandler.createNewPlayer(topMenu.getItemList());
+      } else {
+        // just add it to the queue
+        mediaHandler.addMedia(topMenu.getItemList());
+      }
+      
       // Break below into a new eventHandler
       // mediaHandler.getPlayer().setOnReady(() -> {
       //   centerPane.addImageView(mediaHandler.getAlbumArt());
