@@ -27,12 +27,13 @@ public class BottomPane extends VBox {
     
     this.eventBus = eventBus;
 
+    // Take this whole thing and make it it's own class
     Button play = new Button("Play");
     Button pause = new Button("Pause");
     Button stop = new Button("Stop");
     Button forward = new Button("Forward");
     Button rewind = new Button("Rewind");
-    this.repeat = new Button("Repeat: OFF");
+    this.repeat = new Button("Repeat: Off");
 
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
@@ -54,7 +55,7 @@ public class BottomPane extends VBox {
 
     timeControls.getChildren().addAll(seekBar, time);
     volumeControls.getChildren().addAll(volSlider, volume);
-    bottomButtons.getChildren().addAll(play, pause, stop, forward, rewind, repeat);
+    bottomButtons.getChildren().addAll(play, pause, stop, rewind, forward, repeat);
     this.getChildren().addAll(bottomButtons, timeControls, volumeControls);
 
   }

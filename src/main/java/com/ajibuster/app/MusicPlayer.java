@@ -6,7 +6,6 @@ import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
-import com.ajibuster.app.eventbus.events.SkipMediaEvent;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;
@@ -22,7 +21,7 @@ public class MusicPlayer extends BorderPane {
     this.topMenu = new TopMenu(eventBus);
     BottomPane bottomPane = new BottomPane(eventBus);
     LeftPane leftPane = new LeftPane();
-    this.centerPane = new CenterPane();
+    this.centerPane = new CenterPane(eventBus);
     this.mediaHandler = mediaHandler;
 
     leftPane.setStyle("-fx-border-style: hidden solid hidden hidden; -fx-border-color: black");
@@ -36,7 +35,6 @@ public class MusicPlayer extends BorderPane {
     eventBus.listen(OpenMediaEvent.class, new OpenMediaEventListener());
     eventBus.listen(OpenPlaylistEvent.class, new OpenPlaylistEventListener());
     eventBus.listen(OpenMultipleMediaEvent.class, new OpenMultipleMediaEventListener());
-    eventBus.listen(SkipMediaEvent.class, new SkipMediaEventListener());
   }
 
   //#region
@@ -75,15 +73,6 @@ public class MusicPlayer extends BorderPane {
         mediaHandler.addMedia(topMenu.getItemList());
       }
     }
-  }
-  private class SkipMediaEventListener implements EventListener<SkipMediaEvent> {
-
-    @Override
-    public void handle(SkipMediaEvent event) {
-      // load new image
-      centerPane.addImageView(mediaHandler.getAlbumArt());
-    }
-
   }
   //#endregion
 }

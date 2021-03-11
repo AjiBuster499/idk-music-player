@@ -1,21 +1,11 @@
 GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Player. Develop a strong understanding of JavaFX and it's tools.
 
-META: Practice Unit Testing. A good time for this is while implementing (1a).
+META: Practice Unit Testing.
 META: Poke around in Docker and make the player alone run in a docker.
 
 1. Playlist Implementation.
 1a. Add to the queue:
   * Open Playlist should only have .m3u and All Files options
-  * ISSUE: Closing file selection without selecting a file throws an error
-    - Potential Solutions:
-      a. Emit an Event on the EventBus
-        * Requires FileWindow to know about EventBus
-        * Listener is in TopMenu to simply do nothing
-      b. just deal with IndexOutOfBounds
-        * FeelsBadMan, but it's not hindering the application.
-
-1b. Reimplementation of AlbumArt
-  - Emit new Event after loading a song to tell the window to display new art
 
 1c. Save Playlist to file.
   * Use FileWriter to write a file in .m3u
@@ -37,6 +27,7 @@ META: Poke around in Docker and make the player alone run in a docker.
 3c. Use Images for Labels instead of text.
 3d. UI Components only work when music is selected.
 3e. Add Label to show stop time. (Basic Look: CURRENT ----SEEKBAR---- STOP)
+3f. Add styling
 
 ?. Prepare for first release?
 ?a. research how to package code and deploy

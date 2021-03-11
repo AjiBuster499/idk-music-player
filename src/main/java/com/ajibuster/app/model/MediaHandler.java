@@ -55,7 +55,7 @@ public class MediaHandler {
     // Check the Playlist
     if (this.playlist == null) {
       // Generate a new playlist
-      this.playlist = new Playlist(itemList, this.eventBus);
+      this.playlist = new Playlist(itemList);
     }
 
     // Establish a player for the first song and play it.
@@ -85,6 +85,9 @@ public class MediaHandler {
         player.seek(Duration.ZERO);
         break;
       }
+    });
+    this.player.setOnReady(() -> {
+      eventBus.emit(new LoadArtEvent(getAlbumArt()));
     });
     this.player.setAutoPlay(true);
     this.player.setOnPlaying(() -> {
@@ -123,9 +126,12 @@ public class MediaHandler {
     timeThread.start();
   }
 
-  public ImageView getAlbumArt () {
+  private ImageView getAlbumArt () {
     // Fetches Album Cover from metadata.
     ImageView iv = new ImageView((Image) this.playlist.getCurrentMedia().getMetadata().get("image"));
+    // Future implementations:
+    // * store in cache for faster loading
+    // * be sure to give an option to empty cache
     return iv;
   }
 
@@ -175,15 +181,27 @@ public class MediaHandler {
   private class RewindEventListener implements EventListener<RewindEvent> {
     @Override
     public void handle(RewindEvent event) {
-      Duration rewindTime = player.getCurrentTime().subtract(new Duration(5000));
-      player.seek(rewindTime);
+      // Duration rewindTime = player.getCurrentTime().subtract(new Duration(5000));
+      // player.seek(rewindTime);
+      if (isPlayerAlive()) {
+        player.dispose();
+      }
+      playlist.prev();
+      player = new MediaPlayer(playlist.getCurrentMedia());
+      initPlay();
     }
   }
   private class ForwardEventListener implements EventListener<ForwardEvent> {
     @Override
     public void handle(ForwardEvent event) {
-      Duration forwardTime = player.getCurrentTime().add(new Duration(5000));
-      player.seek(forwardTime);
+      // Duration forwardTime = player.getCurrentTime().add(new Duration(5000));
+      // player.seek(forwardTime);
+      if (isPlayerAlive()) {
+        player.dispose();
+      }
+      playlist.next();
+      player = new MediaPlayer(playlist.getCurrentMedia());
+      initPlay();
     }
   }
   private class VolumeChangedEventListener implements EventListener<VolumeChangedEvent> {
@@ -200,12 +218,10 @@ public class MediaHandler {
       switch (event.getStatus()) {
         case REPEAT_OFF:
           repeatStatus = RepeatStatus.REPEAT_OFF;
-          playlist.setRepeating(false);
           player.setCycleCount(1);
           break;
         case REPEAT_ON:
           repeatStatus = RepeatStatus.REPEAT_ON;
-          playlist.setRepeating(true);
           player.setCycleCount(1);
           break;
         case REPEAT_ONE:

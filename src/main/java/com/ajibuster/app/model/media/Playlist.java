@@ -2,24 +2,17 @@ package com.ajibuster.app.model.media;
 
 import java.util.ArrayList;
 
-import com.ajibuster.app.eventbus.EventBus;
-import com.ajibuster.app.eventbus.events.SkipMediaEvent;
-
 import javafx.scene.media.Media;
 
 public class Playlist {
   private int index = 0;
 
-  private boolean repeating = false;
   private boolean endOfPlaylist = false;
-
-  private EventBus eventBus;
 
   private ArrayList<Media> mediaList;
   
-  public Playlist (ArrayList<MediaItem> itemList, EventBus eventBus) {
+  public Playlist (ArrayList<MediaItem> itemList) {
     this.mediaList = createMedia(itemList);
-    this.eventBus = eventBus;
     
     // Use itemlist to set every media's title and artist.
   }
@@ -37,13 +30,10 @@ public class Playlist {
     // skip to next song
     if (this.index == this.mediaList.size() - 1) {
       this.endOfPlaylist = true;
-      if (this.repeating) {
-        this.index = 0;
-      }
+      this.index = 0;
     } else {
       this.index++;
     }
-    this.eventBus.emit(new SkipMediaEvent());
     return this.mediaList.get(index);
   }
 
@@ -54,7 +44,6 @@ public class Playlist {
     } else {
       this.index--;
     }
-    this.eventBus.emit(new SkipMediaEvent());
     return this.mediaList.get(index);
   }
 
@@ -74,10 +63,6 @@ public class Playlist {
 
   public ArrayList<Media> getMediaList () {
     return this.mediaList;
-  }
-
-  public void setRepeating (boolean newRepeating) {
-    this.repeating = newRepeating;
   }
 
   public boolean isEndOfPlaylist () {
