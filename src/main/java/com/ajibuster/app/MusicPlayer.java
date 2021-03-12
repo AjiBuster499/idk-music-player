@@ -6,6 +6,7 @@ import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
+import com.ajibuster.app.eventbus.events.SaveToPlaylistEvent;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;
@@ -35,6 +36,7 @@ public class MusicPlayer extends BorderPane {
     eventBus.listen(OpenMediaEvent.class, new OpenMediaEventListener());
     eventBus.listen(OpenPlaylistEvent.class, new OpenPlaylistEventListener());
     eventBus.listen(OpenMultipleMediaEvent.class, new OpenMultipleMediaEventListener());
+    eventBus.listen(SaveToPlaylistEvent.class, new SaveToPlaylistEventListener());
   }
 
   //#region
@@ -73,6 +75,17 @@ public class MusicPlayer extends BorderPane {
         mediaHandler.addMedia(topMenu.getItemList());
       }
     }
+  }
+
+  private class SaveToPlaylistEventListener implements EventListener<SaveToPlaylistEvent> {
+
+    @Override
+    public void handle(SaveToPlaylistEvent event) {
+      SaveFileWindow fw = new SaveFileWindow("Save to Playlist...");
+      fw.saveToFile(mediaHandler.getPlaylist().getMediaPaths());
+      
+    }
+
   }
   //#endregion
 }

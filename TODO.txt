@@ -1,7 +1,6 @@
 GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Player. Develop a strong understanding of JavaFX and it's tools.
 
 META: Practice Unit Testing.
-META: Poke around in Docker and make the player alone run in a docker.
 
 1. Playlist Implementation.
 1a. Add to the queue:

@@ -135,6 +135,10 @@ public class MediaHandler {
     return iv;
   }
 
+  public Playlist getPlaylist () {
+    return this.playlist;
+  }
+
   public boolean isPlayerAlive () {
     return this.player != null ? true: false;
   }

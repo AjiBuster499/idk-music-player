@@ -61,6 +61,15 @@ public class Playlist {
     return this.mediaList.get(index);
   }
 
+  public ArrayList<String> getMediaPaths () {
+    ArrayList<String> pathList = new ArrayList<String>();
+    for (Media media : mediaList) {
+      // Comes in a file:// format
+      pathList.add(media.getSource());
+    }
+    return pathList;
+  }
+
   public ArrayList<Media> getMediaList () {
     return this.mediaList;
   }

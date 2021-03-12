@@ -13,14 +13,13 @@ import com.ajibuster.app.model.media.MediaItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-// TODO: Probably rename to OpenFileWindow
-public class FileWindow {
+public class OpenFileWindow {
   private Stage window = new Stage();
   private FileChooser fc = new FileChooser();
   private List<File> fileList;
   private ArrayList<MediaItem> itemList;
 
-  public FileWindow(String title) {
+  public OpenFileWindow(String title) {
     // TODO: Make different ExtensionFilters for each type of window
     this.fileList = new ArrayList<File>();
     window.setTitle(title);
