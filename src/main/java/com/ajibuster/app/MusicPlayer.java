@@ -1,12 +1,10 @@
 package com.ajibuster.app;
 
 import com.ajibuster.app.view.*;
+import com.ajibuster.app.view.files.SaveFileWindow;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
-import com.ajibuster.app.eventbus.events.OpenMediaEvent;
-import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
-import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
-import com.ajibuster.app.eventbus.events.SaveToPlaylistEvent;
+import com.ajibuster.app.eventbus.events.*;
 import com.ajibuster.app.model.*;
 
 import javafx.scene.layout.BorderPane;

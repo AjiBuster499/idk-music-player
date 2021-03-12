@@ -1,4 +1,4 @@
-package com.ajibuster.app;
+package com.ajibuster.app.view.files;
 
 import java.io.File;
 import java.io.FileWriter;

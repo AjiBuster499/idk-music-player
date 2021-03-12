@@ -2,7 +2,6 @@ package com.ajibuster.app.view;
 
 import java.util.ArrayList;
 
-import com.ajibuster.app.OpenFileWindow;
 import com.ajibuster.app.eventbus.Event;
 import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.events.OpenMediaEvent;
@@ -10,6 +9,7 @@ import com.ajibuster.app.eventbus.events.OpenMultipleMediaEvent;
 import com.ajibuster.app.eventbus.events.OpenPlaylistEvent;
 import com.ajibuster.app.eventbus.events.SaveToPlaylistEvent;
 import com.ajibuster.app.model.media.MediaItem;
+import com.ajibuster.app.view.files.OpenFileWindow;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
