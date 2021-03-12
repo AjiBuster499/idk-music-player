@@ -16,14 +16,6 @@
     <maven.compiler.target>15</maven.compiler.target>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>in-project</id>
-      <name>In Project Repo</name>
-      <url>file://${project.basedir}/lib</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -86,15 +78,31 @@
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>3.3.0</version>
+          <executions>
+            <execution>
+              <id>create-executable</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
           <configuration>
             <descriptorRefs>
               <descriptorRef>jar-with-dependencies</descriptorRef>
             </descriptorRefs>
             <archive>
               <manifest>
-                <mainClass>com.ajibuster.app.App</mainClass>
+                <addClasspath>true</addClasspath>
+                <mainClass>com.ajibuster.app.Main</mainClass>
               </manifest>
             </archive>
+            <dependencySets>
+              <dependencySet>
+                <includes>
+                </includes>
+              </dependencySet>
+            </dependencySets>
           </configuration>
         </plugin>
       </plugins>
