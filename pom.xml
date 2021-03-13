@@ -28,18 +28,21 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>15.0.1</version>
+      <classifier>win</classifier>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
       <version>15.0.1</version>
+      <classifier>win</classifier>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
       <version>15.0.1</version>
+      <classifier>win</classifier>
     </dependency>
   </dependencies>
 
@@ -57,21 +60,6 @@
           <version>0.0.5</version>
           <configuration>
             <mainClass>com.ajibuster.app.App</mainClass>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <!-- JAR PLUGIN -->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.0</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addClasspath>true</addClasspath>
-                <mainClass>com.ajibuster.app.App</mainClass>
-              </manifest>
-            </archive>
           </configuration>
         </plugin>
 

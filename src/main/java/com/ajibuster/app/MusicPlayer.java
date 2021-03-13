@@ -1,8 +1,7 @@
 package com.ajibuster.app;
 
 import com.ajibuster.app.view.*;
-import com.ajibuster.app.view.files.OpenFileWindow;
-import com.ajibuster.app.view.files.SaveFileWindow;
+import com.ajibuster.app.view.files.FileWindow;
 
 import java.util.ArrayList;
 
@@ -50,7 +49,7 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenMediaEvent event) {
       // Check for a player
-      OpenFileWindow fw = new OpenFileWindow("Open Single Media");
+      FileWindow fw = new FileWindow("Open Single Media", event.getValue());
       itemList = fw.openMedia();
       if (!mediaHandler.isPlayerAlive()) {
         // no player
@@ -65,7 +64,7 @@ public class MusicPlayer extends BorderPane {
   private class OpenPlaylistEventListener implements EventListener<OpenPlaylistEvent> {
     @Override
     public void handle(OpenPlaylistEvent event) {
-      OpenFileWindow fw = new OpenFileWindow("Open Playlist");
+      FileWindow fw = new FileWindow("Open Playlist", event.getValue());
       itemList = fw.openMedia();
       // Create a new player, regardless of whether one exists.
       mediaHandler.createNewPlayer(itemList);
@@ -77,7 +76,7 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenMultipleMediaEvent event) {
       // Same as OpenMediaEventListener for now.
       // Check for a player
-      OpenFileWindow fw = new OpenFileWindow("Open Multiple Media");
+      FileWindow fw = new FileWindow("Open Multiple Media", event.getValue());
       itemList = fw.openMedia();
       if (!mediaHandler.isPlayerAlive()) {
         // no player
@@ -93,7 +92,8 @@ public class MusicPlayer extends BorderPane {
 
     @Override
     public void handle(SaveToPlaylistEvent event) {
-      SaveFileWindow fw = new SaveFileWindow("Save to Playlist...");
+      FileWindow fw = new FileWindow("Save to Playlist...", event.getValue());
+      // TODO: See if the MediaItems list is usable in FileWindow
       fw.saveToFile(mediaHandler.getPlaylist().getMediaPaths());    
     }
 
