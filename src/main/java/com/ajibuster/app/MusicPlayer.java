@@ -50,7 +50,8 @@ public class MusicPlayer extends BorderPane {
     public void handle(OpenMediaEvent event) {
       // Check for a player
       FileWindow fw = new FileWindow("Open Single Media", event.getValue());
-      itemList = fw.openMedia();
+      fw.display();
+      itemList = fw.getItemList();
       if (!mediaHandler.isPlayerAlive()) {
         // no player
         mediaHandler.createNewPlayer(itemList);
@@ -65,7 +66,8 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(OpenPlaylistEvent event) {
       FileWindow fw = new FileWindow("Open Playlist", event.getValue());
-      itemList = fw.openMedia();
+      fw.display();
+      itemList = fw.getItemList();
       // Create a new player, regardless of whether one exists.
       mediaHandler.createNewPlayer(itemList);
     }
@@ -77,7 +79,8 @@ public class MusicPlayer extends BorderPane {
       // Same as OpenMediaEventListener for now.
       // Check for a player
       FileWindow fw = new FileWindow("Open Multiple Media", event.getValue());
-      itemList = fw.openMedia();
+      fw.display();
+      itemList = fw.getItemList();
       if (!mediaHandler.isPlayerAlive()) {
         // no player
         mediaHandler.createNewPlayer(itemList);
@@ -93,8 +96,7 @@ public class MusicPlayer extends BorderPane {
     @Override
     public void handle(SaveToPlaylistEvent event) {
       FileWindow fw = new FileWindow("Save to Playlist...", event.getValue());
-      // TODO: See if the MediaItems list is usable in FileWindow
-      fw.saveToFile(mediaHandler.getPlaylist().getMediaPaths());    
+      fw.saveToFile(mediaHandler.getPlaylist());    
     }
 
   }

@@ -2,22 +2,6 @@ GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Pl
 
 META: Practice Unit Testing.
 
-1. Playlist Implementation.
-1a. Add to the queue:
-  * Open Playlist should only have .m3u and All Files options
-
-1c. Save Playlist to file.
-  * Use FileWriter to write a file in .m3u
-  * Take the current queue, and write it into a .m3u format
-    - #EXTM3U
-    - \n
-    - #EXTINF %d, %s - %s
-    - filePaths
-    - \n
-    - For each path
-  * POSSIBLE ISSUE: Spaces
-    - Convert to %20
-
 2. Display Playlist in GUI.
 
 3. Enhance UI more:

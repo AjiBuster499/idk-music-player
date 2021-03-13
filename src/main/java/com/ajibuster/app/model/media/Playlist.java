@@ -10,11 +10,11 @@ public class Playlist {
   private boolean endOfPlaylist = false;
 
   private ArrayList<Media> mediaList;
+  private ArrayList<MediaItem> itemList;
   
   public Playlist (ArrayList<MediaItem> itemList) {
     this.mediaList = createMedia(itemList);
-    
-    // Use itemlist to set every media's title and artist.
+    this.itemList = itemList;
   }
 
   private ArrayList<Media> createMedia (ArrayList<MediaItem> itemList) {
@@ -61,17 +61,12 @@ public class Playlist {
     return this.mediaList.get(index);
   }
 
-  public ArrayList<String> getMediaPaths () {
-    ArrayList<String> pathList = new ArrayList<String>();
-    for (Media media : mediaList) {
-      // Comes in a file:// format
-      pathList.add(media.getSource());
-    }
-    return pathList;
-  }
-
   public ArrayList<Media> getMediaList () {
     return this.mediaList;
+  }
+
+  public ArrayList<MediaItem> getItemList () {
+    return this.itemList;
   }
 
   public boolean isEndOfPlaylist () {

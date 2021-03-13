@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ajibuster.app.model.media.MediaItem;
+import com.ajibuster.app.model.media.Playlist;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -17,17 +18,15 @@ public class FileWindow {
   private Stage window = new Stage();
   private FileChooser fc = new FileChooser();
 
-  private List<File> fileList;
+  private List<File> fileList = new ArrayList<File>();
   private ArrayList<MediaItem> itemList;
 
   private String extM3UTemplate = "#EXTM3U";
-  private String extInfTemplate = "#EXTINF%d, %s - %s";
+  private String extInfTemplate = "#EXTINF:%d, %s - %s";
   private String osName = System.getProperty("os.name");
   private String uriAddOn = osName.contains("Windows") ? "file:///" : "file://";
 
   public FileWindow(String title, String id) {
-    // TODO: Make different ExtensionFilters for each type of window
-    this.fileList = new ArrayList<File>();
     window.setTitle(title);
     switch (id) {
       case "OpenMultipleMedia":
@@ -49,6 +48,7 @@ public class FileWindow {
         );
         break;
       default:
+        // all the filters
         fc.getExtensionFilters().addAll(
           new FileChooser.ExtensionFilter("mp3 Files", "*.mp3"),
           new FileChooser.ExtensionFilter("m3u Files", "*.m3u"),
@@ -59,68 +59,86 @@ public class FileWindow {
     
   }
 
-  private void display() {
-    this.fileList.clear();
-    List<File> list = fc.showOpenMultipleDialog(window);
-    if (list == null) {
-      // do literally nothing
+  public void display() {
+    this.fileList.addAll(this.fc.showOpenMultipleDialog(window));
+    if (this.fileList == null) {
       return;
-    } else {
-      this.fileList.addAll(list);
     }
+    openMedia();
   }
 
-  public ArrayList<MediaItem> openMedia() {
+  private void openMedia() {
     this.itemList = new ArrayList<MediaItem>();
-    display();
     if (this.fileList.get(0).getAbsolutePath().endsWith(".m3u")) {
-      // Parse .m3u
+      // playlist file
       itemList = parseM3U(this.fileList.get(0));
     } else {
+      // individual media files
       for (File file : fileList) {
+        MediaItem item = new MediaItem();
         String filePath = this.uriAddOn + file.getAbsolutePath().replace("\\", "/").replace("\s", "%20");
-        itemList.add(new MediaItem(filePath));
+        item.setPath(filePath);
+        itemList.add(item);
       }
     }
-    return itemList;
   }
 
   private ArrayList<MediaItem> parseM3U(File m3u) {
-    ArrayList<MediaItem> filePaths = new ArrayList<MediaItem>();
+    ArrayList<MediaItem> itemList = new ArrayList<MediaItem>();
     try {
       BufferedReader reader = new BufferedReader(new FileReader(m3u));
 
       // Start reading the file
       String line;
+      MediaItem item = new MediaItem();
       while ((line = reader.readLine()) != null) {
-        // line starts with # or is blank
-        if (line.startsWith("#") || line.isBlank()) {
-          // Don't want it
-          // Need to add these lines in and parse them into the right data.
+        if (line.startsWith(extM3UTemplate) || line.isBlank()) {
           continue;
+        } else {
+          // skip over "#EXTINF", "%d,", " - "
+          // remainder is, in order, Artist and Title
+          int artistIndex = line.indexOf(", "), titleIndex = line.indexOf(" - ");
+          item.setArtist(line.substring(artistIndex + 2, titleIndex));
+          item.setTitle(line.substring(titleIndex + 3, line.length()));
+
+          // read next line. will be the filePath.
+          line = reader.readLine();
+          item.setPath(this.uriAddOn + line.replace("\\", "/").replace("\s", "%20"));
+          itemList.add(item);
+          item = new MediaItem();
         }
-        String path = this.uriAddOn + line.replace("\\", "/").replace("\s", "%20");
-        filePaths.add(new MediaItem(path));
       }
       reader.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    return filePaths;
+    return itemList;
   }
 
-  private File generateM3UFile (ArrayList<String> pathsList, File m3uFile) {
+  public void saveToFile (Playlist playlist) {
+    File m3uFile = this.fc.showSaveDialog(window);
+    
     try {
       FileWriter writer = new FileWriter (m3uFile);
       writer.write(extM3UTemplate);
-      // Needs to know the paths from Playlist.
-      for (String path : pathsList) {
-        writer.write("\n");
+      // grab all the metadata from the medias
+      // and put it into the mediaItems
+      for (int i = 0; i < playlist.getItemList().size(); i++) {
+        playlist.getItemList().get(i).setSeconds((int) playlist.getMediaList().get(i).getDuration().toSeconds());
+        if (playlist.getItemList().get(i).getArtist() == null) {
+          playlist.getItemList().get(i).setArtist(playlist.getMediaList().get(i).getMetadata().get("artist").toString());
+        }
+        if (playlist.getItemList().get(i).getTitle() == null) {
+          playlist.getItemList().get(i).setTitle(playlist.getMediaList().get(i).getMetadata().get("title").toString());
+        }
+      }
+      for (MediaItem item : playlist.getItemList()) {
+        writer.write("\n\n");
         // Trim out the file://
-        path = path.replace(uriAddOn, "");
+        String path = item.getPath().replace(uriAddOn, "");
         // stand-in parts for right now.
-        writer.write(String.format(extInfTemplate, 10, "Testing", "Testers"));
+        writer.write(String.format(extInfTemplate, item.getSeconds(), item.getArtist(), item.getTitle()));
         writer.write("\n");
         writer.write(path);
       }
@@ -129,10 +147,9 @@ public class FileWindow {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return m3uFile;
   }
 
-  public File saveToFile (ArrayList<String> pathsList) {
-    return generateM3UFile(pathsList, this.fc.showSaveDialog(window));
+  public ArrayList<MediaItem> getItemList() {
+    return this.itemList;
   }
 }
