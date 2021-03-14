@@ -2,7 +2,7 @@ package com.ajibuster.app.model.media;
 
 public class MediaItem {
   private String mediaPath, albumArtist, title;
-  private int seconds = 0;
+  private int duration = 0;
 
   public MediaItem () {
   }
@@ -23,12 +23,12 @@ public class MediaItem {
     this.mediaPath = path;
   }
 
-  public int getSeconds () {
-    return this.seconds;
+  public int getDuration () {
+    return this.duration;
   }
 
-  public void setSeconds (int seconds) {
-    this.seconds = seconds;
+  public void setDuration (int duration) {
+    this.duration = duration;
   }
 
   public String getTitle () {

@@ -2,6 +2,9 @@ GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Pl
 
 META: Practice Unit Testing.
 
+1. Playlist Implementation
+  * Generate MediaItem data on a separate Thread.
+
 2. Display Playlist in GUI.
 
 3. Enhance UI more:

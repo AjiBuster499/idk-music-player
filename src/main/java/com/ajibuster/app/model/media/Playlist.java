@@ -15,6 +15,7 @@ public class Playlist {
   public Playlist (ArrayList<MediaItem> itemList) {
     this.mediaList = createMedia(itemList);
     this.itemList = itemList;
+    generateMetadata();
   }
 
   private ArrayList<Media> createMedia (ArrayList<MediaItem> itemList) {
@@ -22,13 +23,12 @@ public class Playlist {
     for (MediaItem item : itemList) {
       this.mediaList.add(new Media(item.getPath()));
     }
-
     return this.mediaList;
   }
 
   public Media next() {
     // skip to next song
-    if (this.index == this.mediaList.size() - 1) {
+    if (this.index == this.mediaList.size() - 1) { // check if this is working.
       this.endOfPlaylist = true;
       this.index = 0;
     } else {
@@ -71,5 +71,18 @@ public class Playlist {
 
   public boolean isEndOfPlaylist () {
     return this.endOfPlaylist;
+  }
+
+  public void generateMetadata () {
+    // adds metadata to mediaItem on separate thread
+    MetadataGenerator mdGenerator = new MetadataGenerator(this);
+
+    Thread th = new Thread(mdGenerator);
+    th.setDaemon(true);
+    th.start();
+  }
+
+  public void setItemList (ArrayList<MediaItem> itemList) {
+    this.itemList = itemList;
   }
 }

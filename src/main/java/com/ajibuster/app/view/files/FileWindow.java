@@ -1,6 +1,7 @@
 package com.ajibuster.app.view.files;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -28,6 +29,9 @@ public class FileWindow {
 
   public FileWindow(String title, String id) {
     window.setTitle(title);
+    window.setOnCloseRequest(h -> {
+      window.hide();
+    });
     switch (id) {
       case "OpenMultipleMedia":
         // multiple media, same as single
@@ -120,25 +124,39 @@ public class FileWindow {
     File m3uFile = this.fc.showSaveDialog(window);
     
     try {
-      FileWriter writer = new FileWriter (m3uFile);
+      BufferedWriter writer = new BufferedWriter(new FileWriter(m3uFile));
       writer.write(extM3UTemplate);
       // grab all the metadata from the medias
       // and put it into the mediaItems
       for (int i = 0; i < playlist.getItemList().size(); i++) {
-        playlist.getItemList().get(i).setSeconds((int) playlist.getMediaList().get(i).getDuration().toSeconds());
+        if (playlist.getItemList().get(i).getDuration() == 0) {
+          // cannot retrive duration if song has not played yet. wow.
+          int seconds = (int) playlist.getMediaList().get(i).getDuration().toSeconds();
+          System.out.println(seconds);
+        }
         if (playlist.getItemList().get(i).getArtist() == null) {
-          playlist.getItemList().get(i).setArtist(playlist.getMediaList().get(i).getMetadata().get("artist").toString());
+          String artist = playlist.getMediaList().get(i).getMetadata().get("artist").toString();
+          // for some unknown reason, nulls are included.
+          if (artist.endsWith("\0")) {
+            artist = artist.replace("\0", "");
+          }
+          playlist.getItemList().get(i).setArtist(artist);
         }
         if (playlist.getItemList().get(i).getTitle() == null) {
-          playlist.getItemList().get(i).setTitle(playlist.getMediaList().get(i).getMetadata().get("title").toString());
+          String title = playlist.getMediaList().get(i).getMetadata().get("title").toString();
+          // for some unknown reason, nulls are included.
+          if (title.endsWith("\0")) {
+            title = title.replace("\0", "");
+          }
+          playlist.getItemList().get(i).setTitle(title);
         }
       }
       for (MediaItem item : playlist.getItemList()) {
         writer.write("\n\n");
         // Trim out the file://
         String path = item.getPath().replace(uriAddOn, "");
-        // stand-in parts for right now.
-        writer.write(String.format(extInfTemplate, item.getSeconds(), item.getArtist(), item.getTitle()));
+        // add in the data
+        writer.write(String.format(extInfTemplate, item.getDuration(), item.getArtist(), item.getTitle()));
         writer.write("\n");
         writer.write(path);
       }
