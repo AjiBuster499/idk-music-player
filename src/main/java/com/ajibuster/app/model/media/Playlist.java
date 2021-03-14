@@ -73,16 +73,15 @@ public class Playlist {
     return this.endOfPlaylist;
   }
 
-  public void generateMetadata () {
+  private void generateMetadata () {
     // adds metadata to mediaItem on separate thread
     MetadataGenerator mdGenerator = new MetadataGenerator(this);
+    mdGenerator.setOnSucceeded(h -> {
+      itemList = mdGenerator.getValue();
+    });
 
     Thread th = new Thread(mdGenerator);
     th.setDaemon(true);
     th.start();
-  }
-
-  public void setItemList (ArrayList<MediaItem> itemList) {
-    this.itemList = itemList;
   }
 }

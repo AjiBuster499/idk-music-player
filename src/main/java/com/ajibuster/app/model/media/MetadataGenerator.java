@@ -6,10 +6,9 @@ import javafx.concurrent.Task;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-public class MetadataGenerator extends Task<Void> {
+public class MetadataGenerator extends Task<ArrayList<MediaItem>> {
   private ArrayList<MediaItem> itemList;
   private ArrayList<Media> mediaList;
-  private Playlist playlist;
 
   private Object obj = new Object();
 
@@ -18,11 +17,10 @@ public class MetadataGenerator extends Task<Void> {
   public MetadataGenerator (Playlist playlist) {
     this.itemList = playlist.getItemList();
     this.mediaList = playlist.getMediaList();
-    this.playlist = playlist;
   }
 
   @Override
-  protected Void call() throws Exception {
+  protected ArrayList<MediaItem> call() throws Exception {
     try {
       for (i = 0; i < this.mediaList.size(); ++i) {
         if (isCancelled()) {
@@ -33,13 +31,12 @@ public class MetadataGenerator extends Task<Void> {
           obj.wait(100);
         }
       }
-      this.playlist.setItemList(this.itemList);
     } catch (InterruptedException ie) {
       ie.printStackTrace();
       updateMessage("Interrupted. Cancelling...");
       cancel();
     }
-    return null;
+    return this.itemList;
   }
 
   private void generateData(Media media, int i) {
@@ -48,7 +45,7 @@ public class MetadataGenerator extends Task<Void> {
       if (this.itemList.get(i).getDuration() == 0) {
         // get the duration of the media
         // set it to itemList's duration
-        final int duration = (int) Math.ceil(this.mediaList.get(i).getDuration().toSeconds());
+        final int duration = (int) this.mediaList.get(i).getDuration().toSeconds();
         this.itemList.get(i).setDuration(duration);
       }
       if (this.itemList.get(i).getArtist() == null) {

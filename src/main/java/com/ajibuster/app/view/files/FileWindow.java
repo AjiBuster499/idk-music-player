@@ -126,31 +126,6 @@ public class FileWindow {
     try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(m3uFile));
       writer.write(extM3UTemplate);
-      // grab all the metadata from the medias
-      // and put it into the mediaItems
-      for (int i = 0; i < playlist.getItemList().size(); i++) {
-        if (playlist.getItemList().get(i).getDuration() == 0) {
-          // cannot retrive duration if song has not played yet. wow.
-          int seconds = (int) playlist.getMediaList().get(i).getDuration().toSeconds();
-          System.out.println(seconds);
-        }
-        if (playlist.getItemList().get(i).getArtist() == null) {
-          String artist = playlist.getMediaList().get(i).getMetadata().get("artist").toString();
-          // for some unknown reason, nulls are included.
-          if (artist.endsWith("\0")) {
-            artist = artist.replace("\0", "");
-          }
-          playlist.getItemList().get(i).setArtist(artist);
-        }
-        if (playlist.getItemList().get(i).getTitle() == null) {
-          String title = playlist.getMediaList().get(i).getMetadata().get("title").toString();
-          // for some unknown reason, nulls are included.
-          if (title.endsWith("\0")) {
-            title = title.replace("\0", "");
-          }
-          playlist.getItemList().get(i).setTitle(title);
-        }
-      }
       for (MediaItem item : playlist.getItemList()) {
         writer.write("\n\n");
         // Trim out the file://
