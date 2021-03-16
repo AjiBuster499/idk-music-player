@@ -5,6 +5,7 @@ package com.ajibuster.app.model.media;
 public enum RepeatStatus {
   REPEAT_OFF,
   REPEAT_ON,
-  REPEAT_ONE
+  REPEAT_ONE,
+  REPEAT_DEFAULT
   
 }

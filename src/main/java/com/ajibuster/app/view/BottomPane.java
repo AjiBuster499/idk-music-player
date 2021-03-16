@@ -5,6 +5,7 @@ import com.ajibuster.app.eventbus.EventBus;
 import com.ajibuster.app.eventbus.EventListener;
 import com.ajibuster.app.eventbus.events.*;
 import com.ajibuster.app.model.media.RepeatStatus;
+import com.ajibuster.app.model.media.ShuffleStatus;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -15,10 +16,11 @@ import javafx.scene.layout.VBox;
 public class BottomPane extends VBox {
   
   private Label volume, time;
-  private Button repeat;
+  private Button repeat, shuffle;
 
   private EventBus eventBus;
-  private RepeatStatus repeatState = RepeatStatus.REPEAT_OFF;
+  private RepeatStatus repeatState = RepeatStatus.REPEAT_DEFAULT;
+  private ShuffleStatus shuffleState = ShuffleStatus.SHUFFLE_DEFAULT;
 
   public BottomPane (EventBus eventBus) {
     HBox bottomButtons = new HBox();
@@ -33,7 +35,8 @@ public class BottomPane extends VBox {
     Button stop = new Button("Stop");
     Button forward = new Button("Forward");
     Button rewind = new Button("Rewind");
-    this.repeat = new Button("Repeat: Off");
+    this.shuffle = new Button("Shuffle");
+    this.repeat = new Button("Repeat");
 
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
@@ -46,6 +49,7 @@ public class BottomPane extends VBox {
     stop.setOnAction(e -> handle(new StopMediaEvent()));
     forward.setOnAction(e -> handle(new ForwardEvent()));
     rewind.setOnAction(e -> handle(new RewindEvent()));
+    shuffle.setOnAction(e -> handleShuffle());
     this.repeat.setOnAction(e -> handleRepeat());
 
     // Hopefully this doesn't grow to the nightmare in MediaHandler
@@ -55,7 +59,7 @@ public class BottomPane extends VBox {
 
     timeControls.getChildren().addAll(seekBar, time);
     volumeControls.getChildren().addAll(volSlider, volume);
-    bottomButtons.getChildren().addAll(play, pause, stop, rewind, forward, repeat);
+    bottomButtons.getChildren().addAll(play, pause, stop, rewind, forward, shuffle, repeat);
     this.getChildren().addAll(bottomButtons, timeControls, volumeControls);
 
   }
@@ -90,21 +94,49 @@ public class BottomPane extends VBox {
   private void handleRepeat () {
     switch (repeatState) {
       case REPEAT_OFF: {
-        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_OFF));
+        handle(new RepeatStatusChangeEvent(repeatState));
         this.repeat.setText("Repeat: Off");
         repeatState = RepeatStatus.REPEAT_ON;
         break;
       }
       case REPEAT_ON: {
-        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_ON));
+        handle(new RepeatStatusChangeEvent(repeatState));
         this.repeat.setText("Repeat: On");
         repeatState = RepeatStatus.REPEAT_ONE;
         break;
       }
       case REPEAT_ONE: {
-        handle(new RepeatStatusChangeEvent(RepeatStatus.REPEAT_ONE));
+        handle(new RepeatStatusChangeEvent(repeatState));
         this.repeat.setText("Repeat: One");
         repeatState = RepeatStatus.REPEAT_OFF;
+        break;
+      }
+      case REPEAT_DEFAULT: {
+        // initial state
+        this.repeat.setText("Repeat: Off");
+        repeatState = RepeatStatus.REPEAT_ON;
+        break;
+      }
+    }
+  }
+
+  private void handleShuffle() {
+    switch (shuffleState) {
+      case SHUFFLE_OFF: {
+        handle(new ShufflePlaylistEvent(shuffleState));
+        this.shuffle.setText("Shuffle: Off");
+        shuffleState = ShuffleStatus.SHUFFLE_ON;
+        break;
+      }
+      case SHUFFLE_ON: {
+        handle(new ShufflePlaylistEvent(shuffleState));
+        this.shuffle.setText("Shuffle: On");
+        shuffleState = ShuffleStatus.SHUFFLE_OFF;
+        break;
+      }
+      case SHUFFLE_DEFAULT: {
+        this.shuffle.setText("Shuffle: Off");
+        shuffleState = ShuffleStatus.SHUFFLE_ON;
         break;
       }
     }

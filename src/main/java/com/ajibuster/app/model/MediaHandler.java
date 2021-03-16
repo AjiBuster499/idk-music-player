@@ -55,7 +55,7 @@ public class MediaHandler {
     // Check the Playlist
     if (this.playlist == null) {
       // Generate a new playlist
-      this.playlist = new Playlist(itemList);
+      this.playlist = new Playlist(itemList, this.eventBus);
     }
 
     // Establish a player for the first song and play it.
@@ -67,23 +67,26 @@ public class MediaHandler {
     // CLEANUP: Attempt to remove recursive
     this.player.setOnEndOfMedia(() -> {
       switch (repeatStatus) {
-      case REPEAT_OFF:
-        // do not repeat on end
-        if (playlist.isEndOfPlaylist()) {
-          player.seek(Duration.ZERO);
-          player.stop();
+        case REPEAT_OFF:
+          // do not repeat on end
+          if (playlist.isEndOfPlaylist()) {
+            player.seek(Duration.ZERO);
+            player.stop();
+            break;
+          }
+        case REPEAT_ON:
+          // repeat on end
+          player.dispose();
+          player = new MediaPlayer(playlist.next());
+          initPlay();
           break;
-        }
-      case REPEAT_ON:
-        // repeat on end
-        player.dispose();
-        player = new MediaPlayer(playlist.next());
-        initPlay();
-        break;
-      case REPEAT_ONE:
-        // repeat this media
-        player.seek(Duration.ZERO);
-        break;
+        case REPEAT_ONE:
+          // repeat this media
+          player.seek(Duration.ZERO);
+          break;
+        case REPEAT_DEFAULT:
+          // will never be here
+          break;
       }
     });
     this.player.setOnReady(() -> {
@@ -220,19 +223,25 @@ public class MediaHandler {
       // Need to define cases for each status
       // Possible cleanup: Create a pattern of sorts for these switches
       switch (event.getStatus()) {
-        case REPEAT_OFF:
+        case REPEAT_OFF:{
           repeatStatus = RepeatStatus.REPEAT_OFF;
           player.setCycleCount(1);
           break;
-        case REPEAT_ON:
+        }
+        case REPEAT_ON:{
           repeatStatus = RepeatStatus.REPEAT_ON;
           player.setCycleCount(1);
           break;
-        case REPEAT_ONE:
+        }
+        case REPEAT_ONE:{
           // Return when playlists are implemented
           repeatStatus = RepeatStatus.REPEAT_ONE;
           player.setCycleCount(MediaPlayer.INDEFINITE);
           break;
+        }
+        case REPEAT_DEFAULT:{
+          break;
+        }
       } 
     }
   }
