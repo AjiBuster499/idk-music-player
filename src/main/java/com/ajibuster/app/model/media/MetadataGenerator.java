@@ -16,7 +16,7 @@ public class MetadataGenerator extends Task<ArrayList<MediaItem>> {
 
   public MetadataGenerator (Playlist playlist) {
     this.itemList = playlist.getItemList();
-    this.mediaList = playlist.getMediaList();
+    this.mediaList = playlist.getListToSave();
   }
 
   @Override
