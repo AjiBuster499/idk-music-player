@@ -15,20 +15,20 @@ public class MediaItem {
     this.albumArtist = artist;
   }
 
-  public String getPath () {
-    return this.mediaPath;
-  }
-
-  public void setPath (String path) {
-    this.mediaPath = path;
-  }
-
   public int getDuration () {
     return this.duration;
   }
 
   public void setDuration (int duration) {
     this.duration = duration;
+  }
+
+  public String getPath () {
+    return this.mediaPath;
+  }
+
+  public void setPath (String path) {
+    this.mediaPath = path;
   }
 
   public String getTitle () {

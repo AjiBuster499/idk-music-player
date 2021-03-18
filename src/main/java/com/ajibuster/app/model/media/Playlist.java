@@ -108,6 +108,7 @@ public class Playlist {
     if (this.shuffled) {
       shuffle(this.mediaList);
     }
+    generateMetadata();
     return this.mediaList;
   }
 
@@ -119,13 +120,13 @@ public class Playlist {
    */
   public Media next() {
     // skip to next media
-    if (this.index == this.mediaList.size() - 1) { // check if this is working.
+    if (this.index == this.mediaList.size() - 1) {
       this.endOfPlaylist = true;
       this.index = 0;
     } else {
       this.index++;
     }
-    return this.mediaList.get(index);
+    return this.mediaList.get(this.index);
   }
 
   /**
@@ -189,13 +190,17 @@ public class Playlist {
   private void generateMetadata () {
     // adds metadata to mediaItem on separate thread
     MetadataGenerator mdGenerator = new MetadataGenerator(this);
-    mdGenerator.setOnSucceeded(h -> {
-      itemList = mdGenerator.getValue();
-    });
+    System.out.println("Generating new Metadata");
 
     Thread th = new Thread(mdGenerator);
     th.setDaemon(true);
     th.start();
+
+    mdGenerator.setOnSucceeded(h -> { // test updated handler
+      itemList = mdGenerator.getValue();
+      mdGenerator.cancel();
+      th.interrupt();
+    });
   }
 
   //#region
@@ -205,17 +210,9 @@ public class Playlist {
     public void handle(ShufflePlaylistEvent event) {
       switch(event.getStatus()) {
         case SHUFFLE_OFF: {
-          // TODO: Need to update index to the current media
-          // for example, if in an unshuffled list, a media has index 4,
-          // and when shuffled it becomes index 1, then when the playlist is
-          // unshuffled again, the index needs to be updated to 4.
-          // This prevents duplicate playing of the media.
-          // While I do dig a replay of Real Folk Blues,
-          // it shouldn't be acting like that.
+          int tempIndex = listToSave.indexOf(getCurrentMedia());
           mediaList = new ArrayList<>(listToSave);
-          System.out.println("Before setting index: " + index);
-          index = listToSave.indexOf(getCurrentMedia());
-          System.out.println("After setting index: " + index);
+          index = tempIndex;
           shuffled = false;
           break;
         }
