@@ -64,29 +64,37 @@ public class MediaHandler {
   }
 
   private void initPlay () {
-    // CLEANUP: Attempt to remove recursive
+    // CLEANUP: remove recursive
     this.player.setOnEndOfMedia(() -> {
       switch (repeatStatus) {
-        case REPEAT_OFF:
-          // do not repeat on end
+        case REPEAT_OFF: {
+          // do not repeat playlist on end
+          player.dispose();
+          player = new MediaPlayer(playlist.next());
+          initPlay();
           if (playlist.isEndOfPlaylist()) {
             player.seek(Duration.ZERO);
             player.stop();
-            break;
+            playlist.setEndOfPlaylist(false);
           }
-        case REPEAT_ON:
-          // repeat on end
+          break;
+        }
+        case REPEAT_ON: {
+          // repeat playlist on end
           player.dispose();
           player = new MediaPlayer(playlist.next());
           initPlay();
           break;
-        case REPEAT_ONE:
+        }
+        case REPEAT_ONE: {
           // repeat this media
           player.seek(Duration.ZERO);
           break;
-        case REPEAT_DEFAULT:
+        }
+        case REPEAT_DEFAULT: {
           // will never be here
           break;
+        }
       }
     });
     this.player.setOnReady(() -> {

@@ -11,6 +11,7 @@ public class VolumeSlider extends Slider {
 
   public VolumeSlider (EventBus eventBus) {
     this.eventBus = eventBus;
+    setId("volumeSlider");
   
     setOnMouseClicked(this::changeVolume);
     setOnMouseDragged(this::changeVolume);

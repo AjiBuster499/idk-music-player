@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
+  private MusicPlayer mp;
 
   public static void main(String[] args) {
     launch(args);
@@ -20,12 +21,16 @@ public class App extends Application {
     
     EventBus eventBus = new EventBus();
     MediaHandler mediaHandler = new MediaHandler(eventBus);
-    MusicPlayer mp = new MusicPlayer(mediaHandler, eventBus);
+    this.mp = new MusicPlayer(mediaHandler, eventBus);
 
-    Scene scene = new Scene(mp, 800, 800);
+    Scene scene = new Scene(this.mp, 800, 800);
 
     primaryStage.setScene(scene);
     primaryStage.show();
+  }
+
+  public MusicPlayer getRoot() {
+    return this.mp;
   }
 
 }

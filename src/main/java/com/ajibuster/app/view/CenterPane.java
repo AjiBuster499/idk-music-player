@@ -14,6 +14,7 @@ public class CenterPane extends StackPane {
   public CenterPane (EventBus eventBus) {
     // Blank Pane for first opening
     // Maybe create a default image to display
+    setId("centerPane");
 
     eventBus.listen(LoadArtEvent.class, new LoadArtEventListener());
   }

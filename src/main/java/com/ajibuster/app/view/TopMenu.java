@@ -17,6 +17,8 @@ public class TopMenu extends MenuBar {
 
   public TopMenu (EventBus eventBus) {
     this.menuFile = new Menu("File");
+
+    setId("topMenu");
     
     MenuItem openMedia = new MenuItem("Open File...");
     MenuItem openPlaylist = new MenuItem("Open Playlist...");

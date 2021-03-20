@@ -15,6 +15,7 @@ public class SeekBar extends Slider {
   public SeekBar (EventBus eventBus) {
     this.eventBus = eventBus;
     setMinWidth(500);
+    setId("seekBar");
 
     eventBus.listen(CurrentTimeEvent.class, new CurrentTimeEventListener());
 

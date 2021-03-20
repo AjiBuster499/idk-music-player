@@ -38,11 +38,22 @@ public class BottomPane extends VBox {
     this.shuffle = new Button("Shuffle");
     this.repeat = new Button("Repeat");
 
+    play.setId("playButton");
+    pause.setId("pauseButton");
+    stop.setId("stopButton");
+    forward.setId("forwardButton");
+    rewind.setId("rewindButton");
+    this.shuffle.setId("shuffleButton");
+    this.repeat.setId("repeatButton");
+
     VolumeSlider volSlider = new VolumeSlider(eventBus);
     SeekBar seekBar = new SeekBar(this.eventBus);
 
     this.volume = new Label("Vol: 100%");
     this.time = new Label("00:00");
+
+    this.volume.setId("volume");
+    this.time.setId("time");
 
     play.setOnAction(e -> handle(new PlayMediaEvent()));
     pause.setOnAction(e -> handle(new PauseMediaEvent()));

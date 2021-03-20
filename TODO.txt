@@ -2,8 +2,57 @@ GOAL: Understand the Concept of Separation of Concerns. Build a Working Music Pl
 
 META: Practice Unit Testing.
 
-1. Shuffling
-  * GOAL: I forgot
+0. Learn to Unit Test. Using TestFX.
+  * Build unit tests for everything in 1. as it's made.
+
+1. Clean up Media stuffs.
+  * Make 1 mediaList, and use IDs in Media Items to shuffle the list.
+    - This may not actually work.
+  * Clearly Define When, Where, and How to use MediaItems.
+    - Relation to Medias.
+    - A Unique Identifier (UID) that links Medias to MediaItems 1:1.
+      1. Even Duplicate Medias should have separate MediaItems with different UIDs.
+    - MediaItems are for storing and saving data to be used by the Application
+      for display purposes (i.e. stop time, title, artist).
+      1. Also used for saving a new .m3u file.
+    - Create a Translator class for translating MediaItems to Medias.
+      * See if Medias can be given a specific property that can be used for Identification.
+  * Roles of Playlist and MediaHandler
+    - Playlist controls Media
+      1. Shuffling
+      2. Selecting next/previous Media
+      3. Adding Media to the list
+      4. Create a getMedia() method.
+        * next() and prev() return an index
+        * index is then used by Playlist to get a Media which is passed to
+          the MediaHandler to play
+      5. Populating MediaItems to be shared to the rest of the Application.
+        * Accessed by MediaHandler with getItemList(), then everything else uses
+          the MediaHandler's copy.
+    - MediaHandler controls Playback and is the face of the Media logic to the rest of the
+      Application.
+      1. Creates a Player for each Media
+        * MediaPlayers are single-use, dispose and recreate for each Media
+      2. Handling of Repeating
+        * OFF: on EndOfPlaylist, stop. If played again, start from the top
+        * ON: on EndOfPlaylist, continue from the top.
+        * ONE: Repeat the same Media.
+        * Playlist should know what the RepeatStatus is so it can properly adjust it's index
+      3. Creation and Initialization of MediaPlayers
+        * Create a new Player for the first Media in the Playlist.
+        * Initialize the MediaPlayer.
+          - Set onEndOfMedia behavior.
+            1. Check current RepeatStatus. Tell Playlist.
+            3. Dispose of MediaPlayer and re-create and initialize.
+              * Preferably in a non-recursive manner.
+          - Set autoPlay.
+          - Start tracking time.
+      4. Tracking the current Time of the Media.
+        * Handled asynchronously on a separate thread.
+      5. Handlers for playing, pausing, stopping, etc.
+      6. Gives any data related to Media to the rest of the Application.
+      7. The rest of the Application should not need to know about the Playlist.
+        * Everything they need to access can be obtained from the MediaHandler.
 
 2. Display Playlist in GUI.
 
@@ -14,6 +63,8 @@ META: Practice Unit Testing.
 3d. UI Components only work when music is selected.
 3e. Add Label to show stop time. (Basic Look: CURRENT ----SEEKBAR---- STOP)
 3f. Add styling
+
+Figure out what `[WARNING] Module name not found in <mainClass>. Module name will be assumed from module-info.java` when using maven means
 
 ?. Prepare for first release?
 ?a. research how to package code and deploy

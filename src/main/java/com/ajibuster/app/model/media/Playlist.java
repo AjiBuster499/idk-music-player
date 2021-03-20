@@ -53,14 +53,16 @@ public class Playlist {
    */
   private ArrayList<MediaItem> itemList;
   
+  /**
+   * Constructor.
+   * @param itemList
+   * @param eventBus
+   */
   public Playlist (ArrayList<MediaItem> itemList, EventBus eventBus) {
     this.mediaList = new ArrayList<>(createMedia(itemList));
     this.listToSave = new ArrayList<>(this.mediaList);
     this.itemList = itemList;
     generateMetadata();
-    for (Media media : mediaList) {
-      System.out.println("Unshuffled: " + media.getSource());
-    }
 
     eventBus.listen(ShufflePlaylistEvent.class, new ShufflePlaylistEventListener());
   }
@@ -102,6 +104,7 @@ public class Playlist {
    * medias are added, sans what has been already played.
    */
   public ArrayList<Media> queue (ArrayList<MediaItem> newItems) {
+    this.itemList.addAll(newItems);
     ArrayList<Media> newMedias = createMedia(newItems);
     this.listToSave.addAll(newMedias);
     this.mediaList.addAll(newMedias);
@@ -138,11 +141,15 @@ public class Playlist {
   public Media prev() {
     // return to previous media
     if (this.index == 0) {
+      // going backwards from first song
       this.index = this.mediaList.size() - 1;
+      this.endOfPlaylist = true;
     } else {
+      // going backwards elsewhere
       this.index--;
+      this.endOfPlaylist = false;
     }
-    return this.mediaList.get(index);
+    return this.mediaList.get(this.index);
   }
 
   /**
@@ -150,7 +157,7 @@ public class Playlist {
    * @return The current Media.
    */
   public Media getCurrentMedia () {
-    return this.mediaList.get(index);
+    return this.mediaList.get(this.index);
   }
 
   /**
@@ -177,6 +184,10 @@ public class Playlist {
     return this.endOfPlaylist;
   }
 
+  public void setEndOfPlaylist (boolean newBool) {
+    this.endOfPlaylist = newBool;
+  }
+
   /**
    * Generates the full set of data for a MediaItem.
    * Since individual Media files do not contain 
@@ -190,13 +201,12 @@ public class Playlist {
   private void generateMetadata () {
     // adds metadata to mediaItem on separate thread
     MetadataGenerator mdGenerator = new MetadataGenerator(this);
-    System.out.println("Generating new Metadata");
 
     Thread th = new Thread(mdGenerator);
     th.setDaemon(true);
     th.start();
 
-    mdGenerator.setOnSucceeded(h -> { // test updated handler
+    mdGenerator.setOnSucceeded(h -> {
       itemList = mdGenerator.getValue();
       mdGenerator.cancel();
       th.interrupt();
@@ -220,9 +230,6 @@ public class Playlist {
           shuffled = true;
           shuffle(mediaList);
           mediaList = new ArrayList<>(shuffledMedia);
-          for (Media media : mediaList) {
-            System.out.println("Shuffled: " + media.getSource());
-          }
           break;
         }
         case SHUFFLE_DEFAULT: {
